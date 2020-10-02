@@ -4,6 +4,7 @@ Home page:
     2.1 start w/ buttons [daily, weekly, etc.]
     2.2 If time, change to typing time of day/timezone + ?start date
     2.3 Optional: allow user to specify the first # chapters should already be published
+    2.4 Should show how long it will take to get through the book!
 3. Button to generate
     3.1 When button is clicked, a url + edit code appear on the screen
 4. "Generate another" button (when clicked, the fields reset)
@@ -16,3 +17,7 @@ Use guide:
 1. Instructions for using the Home page
     1.1 Picking something off of Librivox and using its url
     1.2 How to subscribe to the RSS url on a few of the most common podcast services
+
+
+"Why" Page:
+1. An explanation of why this exists, and how users may want to use it
