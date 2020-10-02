@@ -4,7 +4,7 @@ const app = express();
 const hostname = '127.0.0.1';
 const port = 21257;
 
-app.get('/nano', async(req, res) => {
+app.get('/node', async(req, res) => {
 	res.status(200).send('Welcome to this app');
 });
 
