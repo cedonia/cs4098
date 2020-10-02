@@ -1,0 +1,18 @@
+Home page:
+1. Text input box (link to book)
+2. Option for how often
+    2.1 start w/ buttons [daily, weekly, etc.]
+    2.2 If time, change to typing time of day/timezone + ?start date
+    2.3 Optional: allow user to specify the first # chapters should already be published
+3. Button to generate
+    3.1 When button is clicked, a url + edit code appear on the screen
+4. "Generate another" button (when clicked, the fields reset)
+5. Another "tab" for the page which allows the user to edit a podcast
+    5.1 Text input box which accepts an edit code
+    5.2 The same input settings as before
+    5.3 Button to edit
+
+Use guide:
+1. Instructions for using the Home page
+    1.1 Picking something off of Librivox and using its url
+    1.2 How to subscribe to the RSS url on a few of the most common podcast services
