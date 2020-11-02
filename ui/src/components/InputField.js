@@ -24,8 +24,14 @@ class InputField extends React.Component {
     this.setState({
       redirect: true
     })
-    // let history =
-    // history.push("/about");
+  // fetch('http://127.0.0.1:21257', {
+  //   mode: 'no-cors'
+  // })
+  // .then(response => response.json())
+  // .then(data => console.log(data))
+  // .then(this.setState({
+  //     redirect: false
+  //   }));
   }
 
   render() {
@@ -39,7 +45,7 @@ class InputField extends React.Component {
 
     return (
     <div>
-      <TextField id="standard-basic" label="Librivox link" required = "true"/>
+      <TextField id="standard-basic" label="Librivox link" required = "true"/> //todo verify it's a valid link
       <br/>
       <br/>
       <p> How often do you want a new chapter?</p>
