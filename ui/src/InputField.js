@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TextField} from '@material-ui/core';
+import {TextField, Button, Select, MenuItem} from '@material-ui/core';
 import ReactDOM from 'react-dom';
 
 class InputField extends React.Component {
@@ -18,18 +18,42 @@ class InputField extends React.Component {
   }
 
   handleSubmit(event) {
-    alert('An essay was submitted: ' + this.state.value);
-    event.preventDefault();
+    alert('The button was clicked: ' + this.state.value);
   }
 
   render() {
+
+  const age = "hello";
+
+  const handleChange = (event) => {
+  	this.setState({value: event.target.value});
+  };
+
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          <textarea value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+    <div>
+      <TextField id="standard-basic" label="Librivox link" required = "true"/>
+      <br/>
+      <br/>
+      <p> How often do you want a new chapter?</p>
+      <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={age}
+          onChange={this.handleChange}
+          autoWidth
+        >
+          <MenuItem value={10}>Daily</MenuItem>
+          <MenuItem value={20}>Every Other Day</MenuItem>
+          <MenuItem value={30}>Weekly</MenuItem>
+        </Select>
+      <br/>
+      <br/>
+      <br/>
+      <Button variant="outlined" onClick = {() => this.handleSubmit("hello")} color="primary">
+  Submit
+</Button>
+      </div>
     );
   }
 }
