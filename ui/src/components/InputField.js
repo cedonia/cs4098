@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {TextField, Button, Select, MenuItem} from '@material-ui/core';
-import {ReactDOM, Redirect} from 'react-dom';
+import {ReactDOM, Redirect, Router, withRouter, useHistory, NavLink} from 'react-dom';
+import About from './About';
 
 class InputField extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this.props);
     this.state = {
       value: this.props.initialText,
       redirect: false
@@ -19,33 +21,24 @@ class InputField extends React.Component {
   }
 
   handleSubmit(event) {
-    this.setRedirect();
-  }
-
-  setRedirect() {
     this.setState({
       redirect: true
     })
-  }
-
-  renderRedirect() {
-    if(this.state.redirect) {
-      return <Redirect to='/about' />
-    }
+    // let history =
+    // history.push("/about");
   }
 
   render() {
 
-  const age = "hello";
+    const age = "hello";
 
-  const handleChange = (event) => {
-  	this.setState({value: event.target.value});
-  };
-
+    if(this.state.redirect) {
+      window.location="http://localhost:3000/confirmation";
+      //todo fix
+    }
 
     return (
     <div>
-      {this.renderRedirect()}
       <TextField id="standard-basic" label="Librivox link" required = "true"/>
       <br/>
       <br/>
@@ -64,7 +57,7 @@ class InputField extends React.Component {
       <br/>
       <br/>
       <br/>
-      <Button variant="outlined" onClick = {() => alert("HELLO")} color="primary">
+      <Button variant="outlined" onClick = {() => this.handleSubmit("hello")} color="primary">
   Submit
 </Button>
       </div>

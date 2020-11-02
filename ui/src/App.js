@@ -1,23 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './App.css';
-import InputField from './InputField.js';
+import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+ 
+import Home from './components/Home';
+import About from './components/About';
+import Error from './components/Error';
+import Navigation from './components/Navigation';
+import Confirmation from './components/Confirmation';
+ 
+class App extends React.Component {
 
-function App() {
-  return (
-    <div className="App">
-      <header className = "logo">
-        <h1>LibriListen</h1>
-      </header>
-
-      <p className="regular-text">
-        Welcome to LibriListen! Navigate to https://librivox.org/search/ and pick out a book. Enter it below to generate a scheduled podcast feed.
-      </p>
-
-      <InputField initialText="Librivox Link" />
-
-    </div>
-  );
+  render() {
+    return (      
+       <BrowserRouter>
+          <Navigation />
+          <Switch>
+            <Route path="/" exact component={Home}/>
+            <Route path="/about" exact component={About}/>
+            <Route path="/confirmation" exact component={Confirmation}/>
+            <Route component={Error}/>
+          </Switch>
+      </BrowserRouter>
+    );
+  }
 }
-
+ 
 export default App;
