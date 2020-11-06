@@ -1,7 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {TextField, Button, Select, MenuItem} from '@material-ui/core';
-import {ReactDOM, Redirect, Router, withRouter, useHistory, NavLink} from 'react-dom';
-import About from './About';
 import axios from 'axios';
 
 class InputField extends React.Component {
