@@ -32,8 +32,13 @@ app.get('/hello', async (req, res) => {
 
 app.get('/GenPodcast', async (req, res) => {
 	res.status(200).json({
-		id: 11111,
-		secret: 22222
+		id: 11111
+	});
+});
+
+app.get('/secretEditCode', async (req, res) => {
+	res.status(200).json({
+		secretEditCode: 22222
 	});
 });
 

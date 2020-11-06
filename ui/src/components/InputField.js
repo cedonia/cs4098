@@ -10,7 +10,8 @@ class InputField extends React.Component {
     console.log(this.props);
     this.state = {
       value: this.props.initialText,
-      redirect: false
+      redirect: false,
+      podcastId: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,32 +27,18 @@ class InputField extends React.Component {
     axios.get('http://localhost:21257/GenPodcast',
     {
       method: 'GET',
-      // mode: 'no-cors',
       headers: {
         'Access-Control-Allow-Origin': 'http://localhost:3000/'
       }
     }
     )
-    .then(response => console.log(response));
-
-  //   fetch('http://127.0.0.1:21257/GenPodcast', {
-  //     method: "GET",
-  //     headers:{
-  //       'Accept':'application/json',
-  //       'Content-Type':'application/json',
-  //     },
-  //     mode: 'no-cors'
-  // })
-  //   // .then(response => console.log(response));
-  // .then(response => response.json())
-  // .then(data => console.log(data))
-  // .then(this.setState({
-  //     redirect: false
-  //   }));
-
-    // this.setState({
-    //   redirect: true
-    // });
+    .then(response => {
+      console.log(response);
+      this.setState({
+        redirect: true,
+        podcastId: response.data.id
+      });
+    });
   }
 
   render() {
@@ -59,7 +46,7 @@ class InputField extends React.Component {
     const age = 10;
 
     if(this.state.redirect) {
-      window.location="http://localhost:3000/confirmation";
+      window.location="http://localhost:3000/confirmation?podcastId=" + this.state.podcastId;
       //todo fix
     }
 

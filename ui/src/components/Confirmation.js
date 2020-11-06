@@ -1,5 +1,6 @@
 import React from 'react';
 import queryString from 'query-string';
+import axios from 'axios';
  
 class Confirmation extends React.Component {
 
@@ -8,14 +9,32 @@ class Confirmation extends React.Component {
 		console.log(props);
 		const query = this.props.location.search;
 		const params = queryString.parse(query);
-		this.state = {podcast: params.podcast};
+		this.state = {podcastId: params.podcastId};
 
+		this.getSecretEditCode();
+
+	}
+
+	getSecretEditCode() {
+		axios.get('http://localhost:21257/secretEditCode',
+	    {
+	      method: 'GET',
+	      headers: {
+	        'Access-Control-Allow-Origin': 'http://localhost:3000/'
+	      }
+	    })
+	    .then(response => {
+	      console.log(response);
+	      this.setState({
+	        secretEditCode: response.data.secretEditCode
+	      });
+    	});
 	}
 
     render() {
 
-    	const podcastLink = "http://librivox.org/podcast/" + this.state.podcast + ".xml";
-    	const secretLink = "http://librivox.org/podcast/" + this.state.podcast;
+    	const podcastLink = "http://librivox.org/podcast/" + this.state.podcastId + ".xml";
+    	const secretLink = "localhost:3000/edit?code=" + this.state.secretEditCode;
 
     	return (
     	<div className="App">
