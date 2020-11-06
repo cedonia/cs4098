@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {TextField, Button, Select, MenuItem} from '@material-ui/core';
 import {ReactDOM, Redirect, Router, withRouter, useHistory, NavLink} from 'react-dom';
 import About from './About';
+import axios from 'axios';
 
 class InputField extends React.Component {
   constructor(props) {
@@ -21,31 +22,52 @@ class InputField extends React.Component {
   }
 
   handleSubmit(event) {
-    this.setState({
-      redirect: true
-    })
-  // fetch('http://127.0.0.1:21257', {
-  //   mode: 'no-cors'
+
+    axios.get('http://localhost:21257/GenPodcast',
+    {
+      method: 'GET',
+      // mode: 'no-cors',
+      headers: {
+        'Access-Control-Allow-Origin': 'http://localhost:3000/'
+      }
+    }
+    )
+    .then(response => console.log(response));
+
+  //   fetch('http://127.0.0.1:21257/GenPodcast', {
+  //     method: "GET",
+  //     headers:{
+  //       'Accept':'application/json',
+  //       'Content-Type':'application/json',
+  //     },
+  //     mode: 'no-cors'
   // })
+  //   // .then(response => console.log(response));
   // .then(response => response.json())
   // .then(data => console.log(data))
   // .then(this.setState({
   //     redirect: false
   //   }));
+
+    // this.setState({
+    //   redirect: true
+    // });
   }
 
   render() {
 
-    const age = "hello";
+    const age = 10;
 
     if(this.state.redirect) {
       window.location="http://localhost:3000/confirmation";
       //todo fix
     }
 
+    //todo verify it's a valid link
+
     return (
     <div>
-      <TextField id="standard-basic" label="Librivox link" required = "true"/> //todo verify it's a valid link
+      <TextField id="standard-basic" label="Librivox link" required = {true}/>
       <br/>
       <br/>
       <p> How often do you want a new chapter?</p>

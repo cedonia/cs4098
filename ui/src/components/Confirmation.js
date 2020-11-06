@@ -14,6 +14,9 @@ class Confirmation extends React.Component {
 
     render() {
 
+    	const podcastLink = "http://librivox.org/podcast/" + this.state.podcast + ".xml";
+    	const secretLink = "http://librivox.org/podcast/" + this.state.podcast;
+
     	return (
     	<div className="App">
 	     	<header className = "logo">
@@ -27,14 +30,14 @@ class Confirmation extends React.Component {
 	        <p className="regular-text">
 	        	Podcast link (share with your book group!):
 	        	<br/>
-	        	http://librivox.org/podcast/{this.state.podcast}.xml
+	        	<a href={podcastLink}>{podcastLink}</a>
 
 	        </p>
 
 	        <p className="regular-text">
 	        	Unique edit link (keep this secret!):
 	        	<br/>
-	        	http://librivox.org/podcast/{this.state.podcast}.xml
+	        	<a href={secretLink}>{secretLink}</a>
 
 	        </p>
 
