@@ -13,7 +13,7 @@ const home = () => {
         Welcome to LibriListen! Navigate to https://librivox.org/search/ and pick out a book. Enter it below to generate a scheduled podcast feed.
       </p>
 
-      <InputField initialText="Librivox Link" />
+      <InputField initialText="Librivox Title" />
 
     </div>
   );

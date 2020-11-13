@@ -14,15 +14,20 @@ class InputField extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTitleChange = this.handleTitleChange.bind(this);
   }
 
   handleChange(event) {
     this.setState({value: event.target.value});
   }
 
+  handleTitleChange(event) {
+    this.setState({title: encodeURIComponent(event.target.value)});
+  }
+
   handleSubmit(event) {
 
-    axios.get('http://localhost:21257/GenPodcast',
+    axios.get('http://localhost:21257/GenPodcast/title/' + this.state.title,
     {
       method: 'GET',
       headers: {
@@ -52,7 +57,7 @@ class InputField extends React.Component {
 
     return (
     <div>
-      <TextField id="standard-basic" label="Librivox link" required = {true}/>
+      <TextField id="standard-basic" onChange={this.handleTitleChange} label="Librivox Title" required = {true}/>
       <br/>
       <br/>
       <p> How often do you want a new chapter?</p>

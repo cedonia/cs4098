@@ -10,12 +10,8 @@ class InputField extends React.Component {
       redirect: false
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleFrequencyChange = this.handleFrequencyChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
@@ -38,15 +34,19 @@ class InputField extends React.Component {
 
   const age = "hello";
 
-  const handleChange = (event) => {
-  	this.setState({value: event.target.value});
+  const handleFrequencyChange = (event) => {
+  	this.setState({title: event.target.value});
   };
+
+  const handleTitleChange = (event) => {
+    this.setState({title: event.target.value});
+  }
 
 
     return (
     <div>
       {this.renderRedirect()}
-      <TextField id="standard-basic" label="Librivox link" required = "true"/>
+      <TextField id="standard-basic" onChangelabel="Title of Book" required = "true"/>
       <br/>
       <br/>
       <p> How often do you want a new chapter?</p>
@@ -54,7 +54,7 @@ class InputField extends React.Component {
           labelId="demo-simple-select-autowidth-label"
           id="demo-simple-select-autowidth"
           value={age}
-          onChange={this.handleChange}
+          onChange={this.handleFrequencyChange}
           autoWidth
         >
           <MenuItem value={10}>Daily</MenuItem>

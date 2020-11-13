@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+const axios = require('axios');
+
 const hostname = 'localhost';
 const port = 21257;
 
@@ -28,10 +30,34 @@ app.get('/hello', async (req, res) => {
     res.status(200).send('Hello World!');
 });
 
-app.get('/GenPodcast', async (req, res) => {
-	res.status(200).json({
-		id: 11111
+app.get('/GenPodcast/title/:title', async (req, res) => {
+	console.log(req.params.title);
+
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss}',
+    {
+      method: 'GET',
+      headers: {
+        'Access-Control-Allow-Origin': 'http://localhost:3000/'
+      }
+    }
+    )
+    .then(response => {
+      // console.log(response);
+      // this.setState({
+      //   redirect: true,
+      //   podcastId: response.data.id
+      // });
+      const data = response.data.books[0]
+      console.log(data);
+      res.status(200).json({
+		id: data.id,
+		title: data.title,
+		url_rss: data.url_rss
 	});
+    })
+    .catch((err) => {
+    	console.log(err)// or have an explicit error class and assign its properties
+    });
 });
 
 app.get('/secretEditCode', async (req, res) => {
