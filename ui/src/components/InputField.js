@@ -39,7 +39,7 @@ class InputField extends React.Component {
       console.log(response);
       this.setState({
         redirect: true,
-        podcastId: response.data.id
+        url_rss: response.data.url_rss
       });
     });
   }
@@ -49,7 +49,7 @@ class InputField extends React.Component {
     const age = 10;
 
     if(this.state.redirect) {
-      window.location="http://localhost:3000/confirmation?podcastId=" + this.state.podcastId;
+      window.location="http://localhost:3000/confirmation?url_rss=" + encodeURIComponent(this.state.url_rss);
       //todo fix
     }
 

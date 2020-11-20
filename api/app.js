@@ -26,10 +26,6 @@ app.get('/', async(req, res) => {
 	res.status(200).send("Welcome to the base page of the app");
 });
 
-app.get('/hello', async (req, res) => {
-    res.status(200).send('Hello World!');
-});
-
 app.get('/GenPodcast/title/:title', async (req, res) => {
 	console.log(req.params.title);
 
@@ -42,11 +38,6 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
     }
     )
     .then(response => {
-      // console.log(response);
-      // this.setState({
-      //   redirect: true,
-      //   podcastId: response.data.id
-      // });
       const data = response.data.books[0]
       console.log(data);
       res.status(200).json({

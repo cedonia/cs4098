@@ -1,0 +1,23 @@
+LIBRILISTEN_PODCASTS
+Librilisten_podcast_id #unique key
+secret_edit_code
+mon
+tues
+wed
+thurs
+fri
+sat
+sun
+is_done
+next_chapter
+
+LIBRIVOX_BOOKS
+Librivox_book_id #unique key
+book_title
+book_author
+url_rss
+quantity_chapters
+
+LIBRIVOX_CHAPTERS
+unique_id #Hash: Librivox_book_id and chapter
+url_recording

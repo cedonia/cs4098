@@ -9,7 +9,7 @@ class Confirmation extends React.Component {
 		console.log(props);
 		const query = this.props.location.search;
 		const params = queryString.parse(query);
-		this.state = {podcastId: params.podcastId};
+		this.state = {url_rss: params.url_rss};
 
 		this.getSecretEditCode();
 
@@ -33,7 +33,7 @@ class Confirmation extends React.Component {
 
     render() {
 
-    	const podcastLink = "http://librivox.org/podcast/" + this.state.podcastId + ".xml";
+    	const podcastLink = this.state.url_rss;
     	const secretLink = "localhost:3000/edit?code=" + this.state.secretEditCode;
 
     	return (
@@ -49,14 +49,14 @@ class Confirmation extends React.Component {
 	        <p className="regular-text">
 	        	Podcast link (share with your book group!):
 	        	<br/>
-	        	<a href={podcastLink}>{podcastLink}</a>
+	        	<a target="_blank" href={podcastLink}>{podcastLink}</a>
 
 	        </p>
 
 	        <p className="regular-text">
 	        	Unique edit link (keep this secret!):
 	        	<br/>
-	        	<a href={secretLink}>{secretLink}</a>
+	        	<a target="_blank" href={secretLink}>{secretLink}</a>
 
 	        </p>
 
