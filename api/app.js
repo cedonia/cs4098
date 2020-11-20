@@ -73,12 +73,13 @@ app.get('/publish', async(req, res) => {
 	});
 	connection.connect();
 	connection.query('SELECT * FROM demo', function(err, rows, fields) {
+		if (err) throw err;
 		console.log(rows);
 	});
 	 
 	connection.end();
 
-	res.status(200).send("Hello!");
+	res.status(200).send("Hello");
 });
 
 const server = app.listen(port, hostname, () => console.log(`App listening at http://${hostname}:${port}`));
