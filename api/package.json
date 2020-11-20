@@ -5,7 +5,9 @@
   "main": "app.js",
   "dependencies": {
     "axios": "^0.21.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "fs": "0.0.1-security",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "express": "^4.17.1"

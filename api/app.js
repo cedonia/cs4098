@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 
+const mysql = require('mysql');
+const fs = require('fs');
+
 const axios = require('axios');
 
 const hostname = 'localhost';
@@ -55,6 +58,26 @@ app.get('/secretEditCode', async (req, res) => {
 	res.status(200).json({
 		secretEditCode: 22222
 	});
+});
+
+app.get('/publish', async(req, res) => {
+	var connection = mysql.createConnection({
+	host     : 'localhost',
+	database : 'cmp24_librilisten',
+	port     : '3306',
+	user     : 'cmp24',
+	password : process.env.password,
+	ssl      : {
+		ca : fs.readFileSync('C:/certs/myCA.pem')
+	}
+	});
+	connection.connect();
+	connection.query('SELECT * FROM demo', function(err, rows, fields) {
+		if (err) throw err;
+		console.log(rows);
+	});
+	 
+	connection.end();
 });
 
 const server = app.listen(port, hostname, () => console.log(`App listening at http://${hostname}:${port}`));
