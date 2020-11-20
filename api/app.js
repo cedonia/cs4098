@@ -67,9 +67,9 @@ app.get('/publish', async(req, res) => {
 	port     : '3306',
 	user     : 'cmp24',
 	password : process.env.password,
-	ssl      : {
-		ca : fs.readFileSync('C:/certs/myCA.pem')
-	}
+	// ssl      : {
+	// 	ca : fs.readFileSync('C:/certs/myCA.pem')
+	// }
 	});
 	connection.connect();
 	connection.query('SELECT * FROM demo', function(err, rows, fields) {
