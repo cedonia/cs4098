@@ -16,7 +16,7 @@ class Confirmation extends React.Component {
 	}
 
 	getSecretEditCode() {
-		axios.get('http://localhost:21257/secretEditCode',
+		axios.get('http://localhost:21267/secretEditCode',
 	    {
 	      method: 'GET',
 	      headers: {
