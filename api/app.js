@@ -63,9 +63,9 @@ app.get('/secretEditCode', async (req, res) => {
 app.get('/publish', async(req, res) => {
 	var connection = mysql.createConnection({
 		host     : 'localhost',
-		database : 'cmp24_librilisten',
+		database : 'librilisten',
 		port     : '3306',
-		user     : 'cmp24',
+		user     : 'cedonia',
 		password : process.env.password,
 		// ssl      : {
 		// 	ca : fs.readFileSync('C:/certs/myCA.pem')
