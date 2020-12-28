@@ -21,12 +21,8 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get('/node', async(req, res) => {
-	res.status(200).send('Welcome to this app');
-});
-
 app.get('/', async(req, res) => {
-	res.status(200).send("Welcome to the base page of the app");
+	res.status(200).send("Welcome to the base page of the Librilisten API.");
 });
 
 app.get('/GenPodcast/title/:title', async (req, res) => {
@@ -41,9 +37,23 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
     }
     )
     .then(response => {
-      const data = response.data.books[0]
-      console.log(data);
-      res.status(200).json({
+    	const data = response.data.books[0]
+    	console.log(data);
+    	var connection = mysql.createConnection({
+			host     : 'localhost',
+			database : 'librilisten',
+			port     : '3306',
+			user     : 'cedonia',
+			password : process.env.password,
+		});
+		connection.connect();
+		NEXT THING TO DO: MAKE A NEW FILE TO ACTUALLY ADD BOOK TO DB (IF NOT ALREADY IN IT)
+		connection.query('SELECT * FROM demo', function(err, rows, fields) {
+			if (err) throw err;
+			console.log(rows);
+		});
+		connection.end();
+		res.status(200).json({
 		id: data.id,
 		title: data.title,
 		url_rss: data.url_rss
@@ -58,28 +68,6 @@ app.get('/secretEditCode', async (req, res) => {
 	res.status(200).json({
 		secretEditCode: 22222
 	});
-});
-
-app.get('/publish', async(req, res) => {
-	var connection = mysql.createConnection({
-		host     : 'localhost',
-		database : 'librilisten',
-		port     : '3306',
-		user     : 'cedonia',
-		password : process.env.password,
-		// ssl      : {
-		// 	ca : fs.readFileSync('C:/certs/myCA.pem')
-		// }
-	});
-	connection.connect();
-	connection.query('SELECT * FROM demo', function(err, rows, fields) {
-		if (err) throw err;
-		console.log(rows);
-	});
-	 
-	connection.end();
-
-	res.status(200).send("Hello");
 });
 
 const server = app.listen(port, hostname, () => console.log(`App listening at http://${hostname}:${port}`));
