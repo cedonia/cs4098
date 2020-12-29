@@ -1,16 +1,23 @@
 var mysql = require('mysql');
 
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "yourusername",
-  password: "yourpassword"
-});
+class database {
+	
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  con.query("CREATE DATABASE mydb", function (err, result) {
-    if (err) throw err;
-    console.log("Database created");
-  });
-});
+}
+
+module.exports.connect = function connect() {
+	console.log("MADE IT INTO CONNECTION");
+		var connection = mysql.createConnection({
+			host     : 'localhost',
+			database : 'librilisten',
+			port     : '3306',
+			user     : 'cedonia',
+			password : process.env.password,
+		});
+		connection.connect();
+		connection.query('SELECT * FROM librivox_books', function(err, rows, fields) {
+			if (err) throw err;
+			console.log(rows);
+		});
+		connection.end();
+	};

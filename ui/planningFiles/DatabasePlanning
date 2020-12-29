@@ -12,6 +12,7 @@ sun
 is_done
 next_chapter
 skip_next (int)
+CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_book_id INT NOT NULL, secret_edit_code INT NOT NULL, mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, next_chapter INT NOT NULL, skip_next INT NOT NULL);
 
 LIBRIVOX_BOOKS
 Librivox_book_id #unique key
@@ -19,8 +20,10 @@ book_title
 book_author
 url_rss
 quantity_chapters
+CREATE TABLE librivox_books (Librivox_book_id INT NOT NULL, book_title VARCHAR(300) NOT NULL, book_author VARCHAR(300) NOT NULL, url_rss VARCHAR(300) NOT NULL, quantity_chapters INT NOT NULL);
 
 LIBRIVOX_CHAPTERS
 Librivox_book_id
-chapter
+chapter //Assign this myself
 url_recording
+CREATE TABLE librivox_chapters (Librivox_book_id INT NOT NULL,chapter INT NOT NULL, url_recording VARCHAR(200) NOT NULL);

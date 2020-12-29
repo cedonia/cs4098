@@ -11,6 +11,8 @@ const port = 21267;
 
 var cors = require('cors');
 
+var database = require('./database.js');
+
 // app.use(cors);
 
 app.use((req, res, next) => {
@@ -28,7 +30,7 @@ app.get('/', async(req, res) => {
 app.get('/GenPodcast/title/:title', async (req, res) => {
 	console.log(req.params.title);
 
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss}',
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss,authors,num_sections}',
     {
       method: 'GET',
       headers: {
@@ -39,6 +41,7 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
     .then(response => {
     	const data = response.data.books[0]
     	console.log(data);
+
     	var connection = mysql.createConnection({
 			host     : 'localhost',
 			database : 'librilisten',
@@ -47,12 +50,19 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 			password : process.env.password,
 		});
 		connection.connect();
-		NEXT THING TO DO: MAKE A NEW FILE TO ACTUALLY ADD BOOK TO DB (IF NOT ALREADY IN IT)
-		connection.query('SELECT * FROM demo', function(err, rows, fields) {
+
+		//Add the book to the database
+		connection.query("INSERT INTO librivox_books VALUES ("+ data.id + ", \'" + data.title + "\', \'" + data.authors[0].last_name + "\', \'" + data.url_rss + "\', " + data.num_sections + ")", function(err, rows, fields) {
 			if (err) throw err;
 			console.log(rows);
 		});
+
+		//Store the book's chapters in the database
+		connection.query("INSERT INTO librivox_chapters VALUES (" + )
+
+
 		connection.end();
+
 		res.status(200).json({
 		id: data.id,
 		title: data.title,
