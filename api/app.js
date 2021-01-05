@@ -16,11 +16,6 @@ let parser = require('xml2js');
 
 const { uuid } = require('uuidv4');
 
-// app.use(express.static('../podcasts'));
-
-
-// app.use(cors);
-
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Credentials", "true");
