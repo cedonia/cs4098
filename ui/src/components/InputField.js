@@ -39,7 +39,8 @@ class InputField extends React.Component {
       console.log(response);
       this.setState({
         redirect: true,
-        url_rss: response.data.url_rss
+        url_rss: response.data.url_rss,
+        secret_edit_link: response.data.secret_edit_link
       });
     });
   }
@@ -49,7 +50,7 @@ class InputField extends React.Component {
     const age = 10;
 
     if(this.state.redirect) {
-      window.location="http://localhost:3000/confirmation?url_rss=" + encodeURIComponent(this.state.url_rss);
+      window.location="http://localhost:3000/confirmation?url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
       //todo fix
     }
 

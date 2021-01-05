@@ -9,32 +9,14 @@ class Confirmation extends React.Component {
 		console.log(props);
 		const query = this.props.location.search;
 		const params = queryString.parse(query);
-		this.state = {url_rss: params.url_rss};
+		this.state = {url_rss: params.url_rss, secret_edit_link: params.secret_edit_link};
 
-		this.getSecretEditCode();
-
-	}
-
-	getSecretEditCode() {
-		axios.get('http://localhost:21267/secretEditCode',
-	    {
-	      method: 'GET',
-	      headers: {
-	        'Access-Control-Allow-Origin': 'http://localhost:3000/'
-	      }
-	    })
-	    .then(response => {
-	      console.log(response);
-	      this.setState({
-	        secretEditCode: response.data.secretEditCode
-	      });
-    	});
 	}
 
     render() {
 
     	const podcastLink = this.state.url_rss;
-    	const secretLink = "localhost:3000/edit?code=" + this.state.secretEditCode;
+    	const secretLink = this.state.secret_edit_link;
 
     	return (
     	<div className="App">
