@@ -16,6 +16,8 @@ let parser = require('xml2js');
 
 const { uuid } = require('uuidv4');
 
+// app.use(express.static('../podcasts'));
+
 
 // app.use(cors);
 
@@ -101,15 +103,24 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 			console.log(rows);
 		});
 
-
-
 		connection.end();
 })
 
 app.get('/podcast/:id', async (req, res) => {
 	//TODO: if the file doesn't exist, generate the initial RSS file and store it in the file system
-	//Return the file
 
+	try {
+		if(fs.existsSync('../podcasts/' + req.params.id + '.rss')) {
+			//File exists
+			res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
+		}
+		else {
+			res.status(200).send("FILE DOES NOT EXIST");
+		}
+	}
+	catch(err) {
+		console.error(err);
+	}
 });
 
 //TODO IS THIS A GET?
