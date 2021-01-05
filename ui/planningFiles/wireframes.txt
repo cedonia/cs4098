@@ -1,0 +1,11 @@
+Home (freshly loaded): https://wireframe.cc/xMiVkT
+Home (book entered, not submitted): https://wireframe.cc/VIykuN
+
+/generated (a freshly generated podcast): https://wireframe.cc/QOJaMm
+
+/edit (editing the frequency): https://wireframe.cc/Bf7uJ7
+/edit (successfully edited a podcast): https://wireframe.cc/Ran83i
+
+/help (a how-to guide): https://wireframe.cc/8oe7Cq
+
+/about (a "why" page): https://wireframe.cc/lXk9rb
