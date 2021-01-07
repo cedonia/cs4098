@@ -35,10 +35,15 @@ app.get('/', async(req, res) => {
 app.get('/GenPodcast/title/:title', async (req, res) => {
 	console.log(req.params.title);
 
+	if(req.params.title.startsWith("The")) {
+		req.params.title = req.params.title.slice(6);
+		console.log("NEW: " + req.params.title);
+	}
+
 	let librilisten_id = uuid();
 	let secret_edit_code = uuid();
 
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + encodeURIComponent(req.params.title) + '&&fields={id,title,url_rss,authors,num_sections}',
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss,authors,num_sections}',
     {
       method: 'GET',
       headers: {
@@ -58,8 +63,8 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 	});
     })
     .catch((err) => {
-    	console.log("ERROR!"); //todo put this back
-    	// console.log(err)// or have an explicit error class and assign its properties
+    	// console.log("ERROR!"); //todo put this back
+    	console.log(err)// or have an explicit error class and assign its properties
     });
 });
 
@@ -76,6 +81,7 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 		//Add the book to the database
 		connection.query("INSERT INTO librivox_books VALUES ("+ data.id + ", \'" + data.title + "\', \'" + data.authors[0].last_name + "\', \'" + data.url_rss + "\', " + data.num_sections + ")", function(err, rows, fields) {
 			if (err) throw err;
+			//TODO make sure it's not storing URI encoded titles
 			// console.log(rows);
 		});
 
@@ -137,7 +143,6 @@ app.get('/podcast/:id', async (req, res) => {
 
 					var builder = new parser.Builder();
 					var xml = builder.buildObject(result);
-					console.log(xml);
 
 					fs.writeFile('../podcasts/' + req.params.id + '.rss', xml, function (err) {
 						if (err) return console.log(err);

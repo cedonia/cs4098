@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/" xmlns:creativeCommons="http://backend.userland.com/creativeCommonsRssModule" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Mayor of Casterbridge, The by HARDY, Thomas</title>
+    <link>https://librivox.org/the-mayor-of-casterbridge-by-thomas-hardy/</link>
+    <atom:link rel="self" href="https://librivox.org/rss/1857"/>
+    <description>The Mayor of Casterbridge (1886) is a tragic novel by English author Thomas Hardy subtitled, "The Life and Death of a Man of Character". It is set in the fictional town of Casterbridge (based on the town of Dorchester in Dorset). The book is one of Hardy's Wessex novels, all set in a fictional rustic England. (Wikipedia)
+A poor, disgruntled, drunken young man sells his wife and child to the highest bidder. When he awakens, sober, the next day he regrets his rash act and vows to give up drink and find his family and bring them home. Eventually he is forced to give up the search and move on with his life. He does this quite successfully until, nearly 20 years later, his past comes back to haunt him. (DebraLynn) </description>
+    <itunes:type>serial</itunes:type>
+    <itunes:author>LibriVox</itunes:author>
+    <itunes:summary>The Mayor of Casterbridge (1886) is a tragic novel by English author Thomas Hardy subtitled, "The Life and Death of a Man of Character". It is set in the fictional town of Casterbridge (based on the town of Dorchester in Dorset). The book is one of Hardy's Wessex novels, all set in a fictional rustic England. (Wikipedia)
+A poor, disgruntled, drunken young man sells his wife and child to the highest bidder. When he awakens, sober, the next day he regrets his rash act and vows to give up drink and find his family and bring them home. Eventually he is forced to give up the search and move on with his life. He does this quite successfully until, nearly 20 years later, his past comes back to haunt him. (DebraLynn) </itunes:summary>
+    <itunes:owner>
+      <itunes:name>LibriVox</itunes:name>
+      <itunes:email>info@librivox.org</itunes:email>
+    </itunes:owner>
+    <itunes:category text="Arts">
+      <itunes:category text="Literature"/>
+    </itunes:category>
+    <item>
+      <title>Chapter 01</title>
+      <itunes:episode>1</itunes:episode>
+      <link>https://librivox.org/the-mayor-of-casterbridge-by-thomas-hardy/</link>
+      <enclosure url="http://www.archive.org/download/mayor_of_casterbridge_0901_dl_librivox1/mayor_of_casterbridge_01_hardy_64kb.mp3" length="0" type="audio/mpeg"/>
+      <itunes:explicit>No</itunes:explicit>
+      <itunes:block>No</itunes:block>
+      <itunes:duration>00:27:58</itunes:duration>
+      <media:content url="http://www.archive.org/download/mayor_of_casterbridge_0901_dl_librivox1/mayor_of_casterbridge_01_hardy_64kb.mp3" type="audio/mpeg"/>
+    </item>
+  </channel>
+</rss>
