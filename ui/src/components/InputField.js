@@ -27,7 +27,7 @@ class InputField extends React.Component {
 
   handleSubmit(event) {
 
-    axios.get('http://localhost:21267/GenPodcast/title/' + this.state.title,
+    axios.get('http://localhost:21267/GenPodcast/title/' + encodeURIComponent(this.state.title),
     {
       method: 'GET',
       headers: {

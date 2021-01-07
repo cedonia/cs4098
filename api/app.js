@@ -38,7 +38,7 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 	let librilisten_id = uuid();
 	let secret_edit_code = uuid();
 
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss,authors,num_sections}',
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + encodeURIComponent(req.params.title) + '&&fields={id,title,url_rss,authors,num_sections}',
     {
       method: 'GET',
       headers: {
@@ -58,7 +58,8 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 	});
     })
     .catch((err) => {
-    	console.log(err)// or have an explicit error class and assign its properties
+    	console.log("ERROR!"); //todo put this back
+    	// console.log(err)// or have an explicit error class and assign its properties
     });
 });
 
@@ -75,7 +76,7 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 		//Add the book to the database
 		connection.query("INSERT INTO librivox_books VALUES ("+ data.id + ", \'" + data.title + "\', \'" + data.authors[0].last_name + "\', \'" + data.url_rss + "\', " + data.num_sections + ")", function(err, rows, fields) {
 			if (err) throw err;
-			console.log(rows);
+			// console.log(rows);
 		});
 
 		//Store the book's chapters in the database
@@ -96,9 +97,9 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 		});
 
 		//Store ref to a new podcast the librilisten_podcasts table
-		connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.id + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 0, 0)", function(err, rows, fields) {
+		connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.id + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 1, 0)", function(err, rows, fields) {
 			if (err) throw err;
-			console.log(rows);
+			// console.log(rows);
 		});
 
 		connection.end();
@@ -106,25 +107,50 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 
 app.get('/podcast/:id', async (req, res) => {
 	//TODO: if the file doesn't exist, generate the initial RSS file and store it in the file system
+	//Store the book's chapters in the database
+	var connection = mysql.createConnection({
+			host     : 'localhost',
+			database : 'librilisten',
+			port     : '3306',
+			user     : 'cedonia',
+			password : process.env.password,
+			multiplestatements: true
+		});
 
-	try {
-		if(!fs.existsSync('../podcasts/' + req.params.id + '.rss')) {
-			//Generate the text of the new rss file
-			var feed = new rss({title: 'hello ' + req.params.id});
-			var xml = feed.xml();
+	connection.connect();
+	await connection.query("SELECT Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE Librilisten_podcast_id = \'" + req.params.id + "\'", function(err, rows, fields) {
+		if(err) throw err;
+		//TODO: there should always be max one entry in the rows array
+		//TODO: what happens if query one that doesn't exist?
+		const next_chapter = rows[0].next_chapter;
 
-			//Write the new rss file
-			await fs.writeFile('../podcasts/' + req.params.id + '.rss', xml, function (err) {
-				if (err) return console.log(err);
+		connection.query("SELECT url_rss FROM librivox_books WHERE Librivox_book_id = " + rows[0].Librivox_book_id, function(err, rows, fields) {
+			if(err) throw err;
+			//TODO: note that there are lots returned if there are duplicates, but they should all be identical
+
+			axios.get(rows[0].url_rss).then(response => {
+				const rss_feed = response.data;
+
+				parser.parseString(rss_feed, function (err, result) {
+					const chapters = result.rss.channel[0].item;
+					chapters.splice(next_chapter);
+
+					var builder = new parser.Builder();
+					var xml = builder.buildObject(result);
+					console.log(xml);
+
+					fs.writeFile('../podcasts/' + req.params.id + '.rss', xml, function (err) {
+						if (err) return console.log(err);
+						res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
+					});
+				});
+				//TODO: defensive programming for file name
+
 			});
-			//TODO: defensive programming for file name
-		}
+		});
 
-		res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
-	}
-	catch(err) {
-		console.error(err);
-	}
+		connection.end();
+	});
 });
 
 //TODO IS THIS A GET?
