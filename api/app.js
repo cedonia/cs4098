@@ -16,6 +16,9 @@ let parser = require('xml2js');
 
 const { uuid } = require('uuidv4');
 
+const rss = require('rss');
+
+
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Credentials", "true");
@@ -105,13 +108,19 @@ app.get('/podcast/:id', async (req, res) => {
 	//TODO: if the file doesn't exist, generate the initial RSS file and store it in the file system
 
 	try {
-		if(fs.existsSync('../podcasts/' + req.params.id + '.rss')) {
-			//File exists
-			res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
+		if(!fs.existsSync('../podcasts/' + req.params.id + '.rss')) {
+			//Generate the text of the new rss file
+			var feed = new rss({title: 'hello ' + req.params.id});
+			var xml = feed.xml();
+
+			//Write the new rss file
+			await fs.writeFile('../podcasts/' + req.params.id + '.rss', xml, function (err) {
+				if (err) return console.log(err);
+			});
+			//TODO: defensive programming for file name
 		}
-		else {
-			res.status(200).send("FILE DOES NOT EXIST");
-		}
+
+		res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
 	}
 	catch(err) {
 		console.error(err);
@@ -121,6 +130,10 @@ app.get('/podcast/:id', async (req, res) => {
 //TODO IS THIS A GET?
 app.get('/edit/:secret', async (req, res) => {
 	//TODO MAKE SURE THIS CAN'T BE ACCESSED WHEN IT SHOULDN'T BE
+});
+
+app.get('/update', async (req, res) => {
+
 });
 
 const server = app.listen(port, hostname, () => console.log(`App listening at http://${hostname}:${port}`));
