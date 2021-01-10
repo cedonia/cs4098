@@ -68,10 +68,10 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 
 let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 	var connection = mysql.createConnection({
-			host     : 'localhost',
-			database : 'librilisten',
-			port     : '3306',
-			user     : 'cedonia',
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
 			password : process.env.password,
 		});
 		connection.connect();
