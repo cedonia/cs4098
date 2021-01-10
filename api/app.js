@@ -37,7 +37,6 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 
 	if(req.params.title.startsWith("The")) {
 		req.params.title = req.params.title.slice(6);
-		console.log("NEW: " + req.params.title);
 	}
 
 	let librilisten_id = uuid();
@@ -59,11 +58,10 @@ app.get('/GenPodcast/title/:title', async (req, res) => {
 
 		res.status(200).json({
 		secret_edit_link: 'http://localhost:21267/edit/' + secret_edit_code,
-		url_rss: 'http://localhost:21267/podcast/' + librilisten_id //TODO: this will be a librilisten link
+		url_rss: 'http://localhost:21267/podcast/' + librilisten_id
 	});
     })
     .catch((err) => {
-    	// console.log("ERROR!"); //todo put this back
     	console.log(err)// or have an explicit error class and assign its properties
     });
 });
@@ -81,8 +79,6 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 		//Add the book to the database
 		connection.query("INSERT INTO librivox_books VALUES ("+ data.id + ", \'" + data.title + "\', \'" + data.authors[0].last_name + "\', \'" + data.url_rss + "\', " + data.num_sections + ")", function(err, rows, fields) {
 			if (err) throw err;
-			//TODO make sure it's not storing URI encoded titles
-			// console.log(rows);
 		});
 
 		//Store the book's chapters in the database
@@ -112,7 +108,6 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 })
 
 app.get('/podcast/:id', async (req, res) => {
-	//TODO: if the file doesn't exist, generate the initial RSS file and store it in the file system
 	//Store the book's chapters in the database
 	var connection = mysql.createConnection({
 			host     : 'localhost',
