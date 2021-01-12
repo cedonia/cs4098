@@ -6,8 +6,8 @@ const fs = require('fs');
 
 const axios = require('axios');
 
-const hostname = 'localhost';
-const port = 21267;
+const hostname = '127.0.0.1';
+const port = 21257;
 
 var cors = require('cors');
 
@@ -27,12 +27,12 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get('/', async(req, res) => {
+app.get('/api', async(req, res) => {
 	res.status(200).send("Welcome to the base page of the Librilisten API.");
 });
 
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
-app.get('/GenPodcast/title/:title', async (req, res) => {
+app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	console.log(req.params.title);
 
 	if(req.params.title.startsWith("The")) {
@@ -107,7 +107,7 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 		connection.end();
 })
 
-app.get('/podcast/:id', async (req, res) => {
+app.get('/api/podcast/:id', async (req, res) => {
 	//Store the book's chapters in the database
 	var connection = mysql.createConnection({
 			host     : 'localhost',
@@ -154,11 +154,11 @@ app.get('/podcast/:id', async (req, res) => {
 });
 
 //TODO IS THIS A GET?
-app.get('/edit/:secret', async (req, res) => {
+app.get('/api/edit/:secret', async (req, res) => {
 	//TODO MAKE SURE THIS CAN'T BE ACCESSED WHEN IT SHOULDN'T BE
 });
 
-app.get('/update', async (req, res) => {
+app.get('/api/update', async (req, res) => {
 
 });
 
