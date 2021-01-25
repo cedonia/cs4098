@@ -1,6 +1,7 @@
 {
   "name": "ui",
   "version": "0.1.0",
+  "homepage": "https://cmp24.host.cs.st-andrews.ac.uk/ui/",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
