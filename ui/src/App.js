@@ -10,6 +10,7 @@ import Confirmation from './components/Confirmation';
 class App extends React.Component {
 
   render() {
+    console.log("HELLO");
     return (      
        <BrowserRouter>
           <Navigation />
