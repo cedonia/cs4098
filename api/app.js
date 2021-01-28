@@ -60,6 +60,11 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		secret_edit_link: secret_edit_code,
 		url_rss: librilisten_id
 	});
+
+	fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', "hello", function (err) {
+                                                if (err) return console.log(err);
+                                          
+                                        });
     })
     .catch((err) => {
     	console.log(err)// or have an explicit error class and assign its properties
