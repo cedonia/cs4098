@@ -115,11 +115,11 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 app.get('/api/podcast/:id', async (req, res) => {
 	//Store the book's chapters in the database
 	var connection = mysql.createConnection({
-			host     : 'localhost',
-			database : 'librilisten',
-			port     : '3306',
-			user     : 'cedonia',
-			password : process.env.password,
+			host     : process.env.host, //localhost
+                        database : process.env.database, //librilisten
+                        port     : process.env.port, //3306
+                        user     : process.env.user, //cedonia
+			password: process.env.password,
 			multiplestatements: true
 		});
 
@@ -144,7 +144,7 @@ app.get('/api/podcast/:id', async (req, res) => {
 					var builder = new parser.Builder();
 					var xml = builder.buildObject(result);
 
-					fs.writeFile('../podcasts/' + req.params.id + '.rss', xml, function (err) {
+					fs.writeFile('../../../nginx_default/podcasts/' + req.params.id + '.rss', xml, function (err) {
 						if (err) return console.log(err);
 						res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
 					});

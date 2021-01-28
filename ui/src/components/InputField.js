@@ -45,6 +45,7 @@ class InputField extends React.Component {
     .then(response => {
       console.log(response);
       console.log("PWD: " + process.cwd());
+      axios.get(this.apiLink + '/api/podcast/' + response.data.url_rss, {method: 'GET'});
       this.setState({
         redirect: true,
         url_rss: response.data.url_rss,
