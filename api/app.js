@@ -57,8 +57,8 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     	storeDatabase(data, librilisten_id, secret_edit_code);
 
 		res.status(200).json({
-		secret_edit_link: 'http://localhost:21267/edit/' + secret_edit_code,
-		url_rss: 'http://localhost:21267/podcast/' + librilisten_id
+		secret_edit_link: secret_edit_code,
+		url_rss: librilisten_id
 	});
     })
     .catch((err) => {
