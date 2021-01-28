@@ -116,10 +116,10 @@ app.get('/api/podcast/:id', async (req, res) => {
 	//Store the book's chapters in the database
 	var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
-                        database : process.env.database, //librilisten
-                        port     : process.env.port, //3306
-                        user     : process.env.user, //cedonia
-			password: process.env.password,
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
 			multiplestatements: true
 		});
 
