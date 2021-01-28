@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import queryString from 'query-string';
  
 import Home from './components/Home';
 import About from './components/About';
@@ -11,6 +12,7 @@ class App extends React.Component {
 
   render() {
     console.log("HELLO");
+
     return (      
        <BrowserRouter>
           <Navigation />

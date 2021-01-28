@@ -17,12 +17,10 @@ class InputField extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
 
-    this.apiLink = 'http://localhost:21257';
-    this.uiLink = 'http://localhost:3000';
-    if(process.env.isProd) {
-      this.apiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
-      this.uiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
-    }
+    // this.apiLink = 'http://localhost:21257';
+    // this.uiLink = 'http://localhost:3000';
+    this.apiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
+    this.uiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
   }
 
   handleChange(event) {
@@ -58,7 +56,7 @@ class InputField extends React.Component {
     const age = 10;
 
     if(this.state.redirect) {
-      window.location= this.uiLink + "/confirmation?url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
+      window.location= this.uiLink + "?page=confirmation&url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
       //todo fix
     }
 

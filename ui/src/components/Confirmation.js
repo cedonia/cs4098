@@ -6,9 +6,20 @@ class Confirmation extends React.Component {
 	constructor(props) {
 		super(props);
 		console.log(props);
-		const query = this.props.location.search;
-		const params = queryString.parse(query);
-		this.state = {url_rss: params.url_rss, secret_edit_link: params.secret_edit_link};
+
+		try {
+			const query = this.props.location.search;
+			const params = queryString.parse(query);
+			this.state = {url_rss: params.url_rss, secret_edit_link: params.secret_edit_link};
+		}
+
+		catch(e) {
+			console.log("PROPS: ");
+			console.log(this.props);
+			this.state={url_rss: this.props.params.url_rss, secret_edit_link: this.props.params.secret_edit_link};
+			console.log(e);
+		}
+		
 
 	}
 
