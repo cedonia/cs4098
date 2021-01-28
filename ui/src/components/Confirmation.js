@@ -25,8 +25,8 @@ class Confirmation extends React.Component {
 
     render() {
 
-    	const podcastLink = this.state.url_rss;
-    	const secretLink = this.state.secret_edit_link;
+    	const podcastLink = decodeURIComponent(this.state.url_rss);
+    	const secretLink = decodeURIComponent(this.state.secret_edit_link);
 
     	return (
     	<div className="App">

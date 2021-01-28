@@ -1,6 +1,7 @@
 import React from 'react';
 import {TextField, Button, Select, MenuItem} from '@material-ui/core';
 import axios from 'axios';
+import Confirmation from './Confirmation.js';
 
 class InputField extends React.Component {
 
@@ -64,6 +65,15 @@ class InputField extends React.Component {
     //todo verify it's a valid link
 
     return (
+
+      <div className="App">
+        <header className="logo">
+          <h1>Librilisten</h1>
+        </header>
+
+        <p className="regular-text">
+          Welcome to LibriListen! Navigate to https://librivox.org/search/ and pick out a book. Enter it below to generate a scheduled podcast feed.
+        </p>
     <div>
       <TextField id="standard-basic" onChange={this.handleTitleChange} label="Librivox Title" required = {true}/>
       <br/>
@@ -86,6 +96,7 @@ class InputField extends React.Component {
       <Button variant="outlined" onClick = {() => this.handleSubmit("hello")} color="primary">
   Submit
 </Button>
+      </div>
       </div>
     );
   }

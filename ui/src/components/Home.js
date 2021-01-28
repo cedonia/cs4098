@@ -28,17 +28,7 @@ class Home extends React.Component {
 
       default:
         return (
-      <div className="App">
-        <header className="logo">
-          <h1>Librilisten</h1>
-        </header>
-
-        <p className="regular-text">
-          Welcome to LibriListen! Navigate to https://librivox.org/search/ and pick out a book. Enter it below to generate a scheduled podcast feed.
-        </p>
-
-        <InputField initialText="Libriox Title" />
-      </div>    
+        <InputField initialText="Libriox Title" /> 
     );  
     }
   }
