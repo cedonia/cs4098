@@ -3,6 +3,7 @@ import {TextField, Button, Select, MenuItem} from '@material-ui/core';
 import axios from 'axios';
 
 class InputField extends React.Component {
+
   constructor(props) {
     super(props);
     console.log(this.props);
@@ -15,6 +16,13 @@ class InputField extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
+
+    this.apiLink = 'http://localhost:21257';
+    this.uiLink = 'http://localhost:3000';
+    if(process.env.isProd) {
+      this.apiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
+      this.uiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
+    }
   }
 
   handleChange(event) {
@@ -27,7 +35,7 @@ class InputField extends React.Component {
 
   handleSubmit(event) {
 
-    axios.get('http://localhost:21267/GenPodcast/title/' + encodeURIComponent(this.state.title),
+    axios.get(this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title),
     {
       method: 'GET',
       headers: {
@@ -50,7 +58,7 @@ class InputField extends React.Component {
     const age = 10;
 
     if(this.state.redirect) {
-      window.location="http://localhost:3000/confirmation?url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
+      window.location= this.uiLink + "/confirmation?url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
       //todo fix
     }
 
