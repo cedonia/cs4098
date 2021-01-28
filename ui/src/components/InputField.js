@@ -56,7 +56,8 @@ class InputField extends React.Component {
     const age = 10;
 
     if(this.state.redirect) {
-      window.location= this.uiLink + "?page=confirmation&url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
+      return(<Confirmation params={{url_rss: encodeURIComponent(this.state.url_rss), secret_edit_link: encodeURIComponent(this.state.secret_edit_link)}} />)
+      // window.location= this.uiLink + "?page=confirmation&url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
       //todo fix
     }
 
