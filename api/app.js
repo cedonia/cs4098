@@ -54,9 +54,9 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     	const data = response.data.books[0]
     	console.log(data);
 
-    	storeDatabase(data, librilisten_id, secret_edit_code);
+    	genFile(librilisten_id, 1, data.url_rss);
 
-    	genFile(librilisten_id, 0, data.url_rss);
+    	storeDatabase(data, librilisten_id, secret_edit_code);
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
@@ -81,7 +81,6 @@ let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 
 			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
 				if (err) return console.log(err);
-				res.sendFile(librilisten_id + '.rss', {root: '../podcasts'});
 			});
 		});
 				//TODO: defensive programming for file name
