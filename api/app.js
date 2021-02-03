@@ -52,16 +52,16 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     )
     .then(response => {
     	const data = response.data.books[0]
-    	// console.log(data);
+    	console.log(data);
 
     	storeDatabase(data, librilisten_id, secret_edit_code);
+
+    	genFile(librilisten_id);
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
 		url_rss: librilisten_id
 	});
-
-	genFile(librilisten_id);
     })
     .catch((err) => {
     	console.log(err)// or have an explicit error class and assign its properties
