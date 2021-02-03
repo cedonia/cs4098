@@ -54,9 +54,9 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     	const data = response.data.books[0]
     	console.log(data);
 
-    	storeDatabase(data, librilisten_id, secret_edit_code);
-
-    	genFile(librilisten_id, 1);
+    	storeDatabase(data, librilisten_id, secret_edit_code).then(resp => {
+    		genFile(librilisten_id, 1);
+    	});
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
