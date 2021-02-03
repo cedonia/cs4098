@@ -54,9 +54,9 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     	const data = response.data.books[0]
     	console.log(data);
 
-    	storeDatabase(data, librilisten_id, secret_edit_code).then(resp => {
-    		genFile(librilisten_id, 1);
-    	});
+    	storeDatabase(data, librilisten_id, secret_edit_code);
+
+    	genFile(librilisten_id, 1, data.url_rss);
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
@@ -68,53 +68,25 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     });
 });
 
-let genFile = (async (librilisten_id, num_chapters) => {
+let genFile = (async (librilisten_id, num_chapters, url_rss) => {
+	axios.get(url_rss).then(response => {
+		const rss_feed = response.data;
 
-	//Store the book's chapters in the database
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-			multiplestatements: true
+		parser.parseString(rss_feed, function (err, result) {
+			const chapters = result.rss.channel[0].item;
+			chapters.splice(next_chapter);
+
+			var builder = new parser.Builder();
+			var xml = builder.buildObject(result);
+
+			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+				if (err) return console.log(err);
+				res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
+			});
 		});
-
-	connection.connect();
-	await connection.query("SELECT Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE Librilisten_podcast_id = \'" + librilisten_id + "\'", function(err, rows, fields) {
-		if(err) throw err;
-		console.log(rows);
-		//TODO: there should always be max one entry in the rows array
-		//TODO: what happens if query one that doesn't exist?
-		const next_chapter = rows[0].next_chapter;
-
-		connection.query("SELECT url_rss FROM librivox_books WHERE Librivox_book_id = " + rows[0].Librivox_book_id, function(err, rows, fields) {
-			if(err) throw err;
-			//TODO: note that there are lots returned if there are duplicates, but they should all be identical
-
-			axios.get(rows[0].url_rss).then(response => {
-				const rss_feed = response.data;
-
-				parser.parseString(rss_feed, function (err, result) {
-					const chapters = result.rss.channel[0].item;
-					chapters.splice(next_chapter);
-
-					var builder = new parser.Builder();
-					var xml = builder.buildObject(result);
-
-					fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-						if (err) return console.log(err);
-						res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
-					});
-				});
 				//TODO: defensive programming for file name
 				//TODO: increment the next_chapter value
 				//TODO: simplify the database
-
-			});
-		});
-
-		connection.end();
 	});
 
 });
