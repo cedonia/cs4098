@@ -56,7 +56,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
     	storeDatabase(data, librilisten_id, secret_edit_code);
 
-    	genFile(librilisten_id);
+    	genFile(librilisten_id, 1);
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
@@ -83,6 +83,7 @@ let genFile = (async (librilisten_id, num_chapters) => {
 	connection.connect();
 	await connection.query("SELECT Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE Librilisten_podcast_id = \'" + librilisten_id + "\'", function(err, rows, fields) {
 		if(err) throw err;
+		console.log(rows);
 		//TODO: there should always be max one entry in the rows array
 		//TODO: what happens if query one that doesn't exist?
 		const next_chapter = rows[0].next_chapter;
