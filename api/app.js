@@ -56,7 +56,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
     	storeDatabase(data, librilisten_id, secret_edit_code);
 
-    	genFile(librilisten_id, 1, data.url_rss);
+    	genFile(librilisten_id, 0, data.url_rss);
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
@@ -68,7 +68,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
     });
 });
 
-let genFile = (async (librilisten_id, num_chapters, url_rss) => {
+let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 	axios.get(url_rss).then(response => {
 		const rss_feed = response.data;
 
@@ -81,7 +81,7 @@ let genFile = (async (librilisten_id, num_chapters, url_rss) => {
 
 			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
 				if (err) return console.log(err);
-				res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
+				res.sendFile(librilisten_id + '.rss', {root: '../podcasts'});
 			});
 		});
 				//TODO: defensive programming for file name
