@@ -61,14 +61,61 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		url_rss: librilisten_id
 	});
 
-	fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', "hello", function (err) {
-                                                if (err) return console.log(err);
-                                          
-                                        });
+	genFile(librilisten_id);
     })
     .catch((err) => {
     	console.log(err)// or have an explicit error class and assign its properties
     });
+});
+
+let genFile = (async (librilisten_id, num_chapters) => {
+
+	//Store the book's chapters in the database
+	var connection = mysql.createConnection({
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
+			multiplestatements: true
+		});
+
+	connection.connect();
+	await connection.query("SELECT Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE Librilisten_podcast_id = \'" + librilisten_id + "\'", function(err, rows, fields) {
+		if(err) throw err;
+		//TODO: there should always be max one entry in the rows array
+		//TODO: what happens if query one that doesn't exist?
+		const next_chapter = rows[0].next_chapter;
+
+		connection.query("SELECT url_rss FROM librivox_books WHERE Librivox_book_id = " + rows[0].Librivox_book_id, function(err, rows, fields) {
+			if(err) throw err;
+			//TODO: note that there are lots returned if there are duplicates, but they should all be identical
+
+			axios.get(rows[0].url_rss).then(response => {
+				const rss_feed = response.data;
+
+				parser.parseString(rss_feed, function (err, result) {
+					const chapters = result.rss.channel[0].item;
+					chapters.splice(next_chapter);
+
+					var builder = new parser.Builder();
+					var xml = builder.buildObject(result);
+
+					fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+						if (err) return console.log(err);
+						res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
+					});
+				});
+				//TODO: defensive programming for file name
+				//TODO: increment the next_chapter value
+				//TODO: simplify the database
+
+			});
+		});
+
+		connection.end();
+	});
+
 });
 
 let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
@@ -112,51 +159,9 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 		connection.end();
 })
 
-app.get('/api/podcast/:id', async (req, res) => {
-	//Store the book's chapters in the database
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-			multiplestatements: true
-		});
-
-	connection.connect();
-	await connection.query("SELECT Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE Librilisten_podcast_id = \'" + req.params.id + "\'", function(err, rows, fields) {
-		if(err) throw err;
-		//TODO: there should always be max one entry in the rows array
-		//TODO: what happens if query one that doesn't exist?
-		const next_chapter = rows[0].next_chapter;
-
-		connection.query("SELECT url_rss FROM librivox_books WHERE Librivox_book_id = " + rows[0].Librivox_book_id, function(err, rows, fields) {
-			if(err) throw err;
-			//TODO: note that there are lots returned if there are duplicates, but they should all be identical
-
-			axios.get(rows[0].url_rss).then(response => {
-				const rss_feed = response.data;
-
-				parser.parseString(rss_feed, function (err, result) {
-					const chapters = result.rss.channel[0].item;
-					chapters.splice(next_chapter);
-
-					var builder = new parser.Builder();
-					var xml = builder.buildObject(result);
-
-					fs.writeFile('../../../nginx_default/podcasts/' + req.params.id + '.rss', xml, function (err) {
-						if (err) return console.log(err);
-						res.sendFile(req.params.id + '.rss', {root: '../podcasts'});
-					});
-				});
-				//TODO: defensive programming for file name
-
-			});
-		});
-
-		connection.end();
-	});
-});
+// app.get('/api/podcast/:id', async (req, res) => {
+	
+// });
 
 //TODO IS THIS A GET?
 app.get('/api/edit/:secret', async (req, res) => {
