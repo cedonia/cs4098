@@ -1,5 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
+import {Button} from '@material-ui/core';
+import InputField from './InputField.js';
  
 class Confirmation extends React.Component {
 
@@ -19,11 +21,24 @@ class Confirmation extends React.Component {
 			this.state={url_rss: this.props.params.url_rss, secret_edit_link: this.props.params.secret_edit_link};
 			console.log(e);
 		}
+
+		this.state = {redirect: false};
+
+		this.handleSubmit = this.handleSubmit.bind(this);
 		
 
 	}
 
+	handleSubmit(event) {
+
+		this.setState({redirect: true});
+	}
+
     render() {
+
+    	if(this.state.redirect) {
+    		return(<InputField initialText="Libriox Title" /> );
+    	}
 
     	const podcastLink = decodeURIComponent(this.state.url_rss);
     	const secretLink = decodeURIComponent(this.state.secret_edit_link);
@@ -51,6 +66,10 @@ class Confirmation extends React.Component {
 	        	<a target="_blank" href={secretLink}>{secretLink}</a>
 
 	        </p>
+
+	        <Button variant="outlined" onClick = {() => this.handleSubmit("hello")} color="primary">
+	        Restart
+	        </Button>
 
     	</div>
     );
