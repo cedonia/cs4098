@@ -5,7 +5,6 @@ import queryString from 'query-string';
 import Home from './components/Home';
 import About from './components/About';
 import Error from './components/Error';
-import Navigation from './components/Navigation';
 import Confirmation from './components/Confirmation';
  
 class App extends React.Component {
