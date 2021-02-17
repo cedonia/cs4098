@@ -13,7 +13,6 @@ class App extends React.Component {
   render() {
     return (      
        <BrowserRouter>
-          <Navigation />
           <Switch>
             <Route path="/" exact component={Home}/>
             <Route path="/about" exact component={About}/>
