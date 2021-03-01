@@ -131,7 +131,7 @@ app.get('/api/update', async (req, res) => {
 		});
 	connection.connect();
 
-	connection.query("SELECT * FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
+	connection.query("SELECT Librivox_book_id FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
 		if(err) throw err;
 		console.log(rows);
 	});
