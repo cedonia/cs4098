@@ -105,7 +105,7 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code, daysOfTheWee
 	//TODO: ACTUALLY PUT IN THE DAYS OF THE WEEK
 
 	//Store ref to a new podcast the librilisten_podcasts table
-	connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.id + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 1, 0)", function(err, rows, fields) {
+	connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.url_rss + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 1, 0)", function(err, rows, fields) {
 		if (err) throw err;
 		// console.log(rows);
 	});
@@ -136,8 +136,8 @@ app.get('/api/update', async (req, res) => {
 		console.log(rows);
 		for(var row of rows) {
 			console.log(row.next_chapter);
+			genFile(row.Librilisten_podcast_id, row.next_chapter, row.Librivox_book_id);
 		}
-		genFile(librilisten_id, 1, data.url_rss);
 	});
 
 

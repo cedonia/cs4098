@@ -13,3 +13,28 @@ is_done
 next_chapter
 skip_next (int)
 CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_book_id INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, next_chapter INT NOT NULL, skip_next INT NOT NULL);
+
+
+~~~~~~~~~~~~
+New version LIBRILISTEN_PODCASTS
+Librilisten_podcast_id #unique key
+Librivox_rss_url
+secret_edit_code
+mon
+tues
+wed
+thurs
+fri
+sat
+sun
+is_done
+skip_next (int)
+CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_book_id INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, next_chapter INT NOT NULL, skip_next INT NOT NULL);
+
+
+Make a database which contains chapters:
+Librilisten_podcast_id
+Chapter_num
+Pub_date (if null, hasn't been published)
+
+Find the first chapter which hasn't been published, and that's the next one to publish
