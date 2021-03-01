@@ -10,7 +10,8 @@ class Confirmation extends React.Component {
 
 		try {
 			const params = this.props.params;
-			this.state = {url_rss: decodeURIComponent(params.url_rss), secret_edit_link: decodeURIComponent(params.secret_edit_link);
+console.log("URL: " + decodeURIComponent(params.url_rss));			
+this.state = {url_rss: decodeURIComponent(params.url_rss), secret_edit_link: decodeURIComponent(params.secret_edit_link)};
 		}
 
 		catch(e) {
@@ -20,7 +21,7 @@ class Confirmation extends React.Component {
 			console.log(e);
 		}
 
-		this.state = {redirect: false};
+		this.state.redirect = false;
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		
