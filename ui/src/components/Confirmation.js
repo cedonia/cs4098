@@ -1,5 +1,4 @@
 import React from 'react';
-import queryString from 'query-string';
 import {Button} from '@material-ui/core';
 import InputField from './InputField.js';
  
@@ -11,8 +10,7 @@ class Confirmation extends React.Component {
 
 		try {
 			const params = this.props.params;
-            console.log("PARAMS URL: " + params.url_rss); 
-			this.state = {url_rss: params.url_rss, secret_edit_link: params.secret_edit_link};
+			this.state = {url_rss: decodeURIComponent(params.url_rss), secret_edit_link: decodeURIComponent(params.secret_edit_link);
 		}
 
 		catch(e) {
