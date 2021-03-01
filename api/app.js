@@ -32,7 +32,7 @@ app.get('/api', async(req, res) => {
 });
 
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
-app.get('/api/GenPodcast/title/:title', async (req, res) => {
+app.get('/api/GenPodcast/title/:title/daysOfTheWeek/:daysOfTheWeek', async (req, res) => {
 	console.log(req.params.title);
 
 	if(req.params.title.startsWith("The")) {
@@ -56,7 +56,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
     	genFile(librilisten_id, 1, data.url_rss);
 
-    	storeDatabase(data, librilisten_id, secret_edit_code);
+    	storeDatabase(data, librilisten_id, secret_edit_code, req.params.daysOfTheWeek);
 
 		res.status(200).json({
 		secret_edit_link: secret_edit_code,
@@ -92,7 +92,7 @@ let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 
 });
 
-let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
+let storeDatabase = (async (data, librilisten_id, secret_edit_code, daysOfTheWeek) => {
 	var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
 			database : process.env.database, //librilisten
@@ -100,42 +100,18 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code) => {
 			user     : process.env.user, //cedonia
 			password : process.env.password,
 		});
-		connection.connect();
+	connection.connect();
 
-		//Add the book to the database
-		connection.query("INSERT INTO librivox_books VALUES ("+ data.id + ", \'" + data.title + "\', \'" + data.authors[0].last_name + "\', \'" + data.url_rss + "\', " + data.num_sections + ")", function(err, rows, fields) {
-			if (err) throw err;
-		});
+	//TODO: ACTUALLY PUT IN THE DAYS OF THE WEEK
 
-		//Store the book's chapters in the database
-		await axios.get(data.url_rss).then(response2 => {
-			const rss_feed = response2.data;
-			const xml = parser.parseString(rss_feed, function (err, result) {
-				const chapters = result.rss.channel[0].item;
-				var currentChapter = 0;
+	//Store ref to a new podcast the librilisten_podcasts table
+	connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.id + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 1, 0)", function(err, rows, fields) {
+		if (err) throw err;
+		// console.log(rows);
+	});
 
-				for(let chapter of chapters) {
-					connection.query("INSERT INTO librivox_chapters VALUES (" + data.id + ", " + currentChapter + ", \'" + chapter.enclosure[0].$.url + "\')", function(err, rows, fields) {
-						if (err) throw err;
-					});
-					currentChapter ++;
-				}
-
-			});
-		});
-
-		//Store ref to a new podcast the librilisten_podcasts table
-		connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.id + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 1, 0)", function(err, rows, fields) {
-			if (err) throw err;
-			// console.log(rows);
-		});
-
-		connection.end();
+	connection.end();
 })
-
-// app.get('/api/podcast/:id', async (req, res) => {
-	
-// });
 
 //TODO IS THIS A GET?
 app.get('/api/edit/:secret', async (req, res) => {
@@ -144,7 +120,27 @@ app.get('/api/edit/:secret', async (req, res) => {
 
 app.get('/api/update', async (req, res) => {
 
-	//todo: Loop through every podcast in the database with more chapters remaining. For each one, genFile with one more chapter.
+	//todo: calculate current day of the week; for now, assume it's Monday
+
+	var connection = mysql.createConnection({
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
+		});
+	connection.connect();
+
+
+
+
+
+	//todo: Loop through every podcast in the database with more chapters remaining.
+
+	// For each book to update, take the existing file for it and add the next chapter. 
+	//Attach to each chapter the current date as pub date.
+
+	//Update each book to indicate the next chapter, and say whether it's done or not
 
 });
 

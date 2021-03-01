@@ -34,7 +34,7 @@ class InputField extends React.Component {
 
   handleSubmit(event) {
 
-    axios.get(this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title),
+    axios.get(this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + '/daysOfTheWeek/' + encodeURIComponent(true, false, false, false, false, false, false),
     {
       method: 'GET',
       headers: {
