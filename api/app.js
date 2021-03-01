@@ -76,6 +76,8 @@ let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 			const chapters = result.rss.channel[0].item;
 			chapters.splice(next_chapter);
 
+			//TODO: Add the pub dates from the old chapters, and the one for this new one.
+
 			var builder = new parser.Builder();
 			var xml = builder.buildObject(result);
 
@@ -141,6 +143,8 @@ app.get('/api/edit/:secret', async (req, res) => {
 });
 
 app.get('/api/update', async (req, res) => {
+
+	//todo: Loop through every podcast in the database with more chapters remaining. For each one, genFile with one more chapter.
 
 });
 
