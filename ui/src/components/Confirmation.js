@@ -11,7 +11,7 @@ class Confirmation extends React.Component {
 
 		try {
 			const params = this.props.params;
-            console.log("QUERY RSS PARSED: " + queryString.parse(params.url_rss)); 
+            console.log("PARAMS URL: " + params.url_rss); 
 			this.state = {url_rss: params.url_rss, secret_edit_link: params.secret_edit_link};
 		}
 
