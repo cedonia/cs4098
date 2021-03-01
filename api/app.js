@@ -131,14 +131,18 @@ app.get('/api/update', async (req, res) => {
 		});
 	connection.connect();
 
-	connection.query("SELECT Librivox_book_id FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
+	connection.query("SELECT Librilisten_podcast_id, Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
 		if(err) throw err;
 		console.log(rows);
+		for(var row of rows) {
+			console.log(row.next_chapter);
+		}
+		genFile(librilisten_id, 1, data.url_rss);
 	});
 
 
 
-
+//TODO: deal with the ones that said to skip; decrement number to skip.
 
 	//todo: Loop through every podcast in the database with more chapters remaining.
 
