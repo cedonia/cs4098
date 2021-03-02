@@ -110,6 +110,8 @@ let storeDatabase = (async (data, librilisten_id, secret_edit_code, daysOfTheWee
 		// console.log(rows);
 	});
 
+	//TODO: store the first chapter with the current date as the pub date!
+
 	connection.end();
 })
 

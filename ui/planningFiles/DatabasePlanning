@@ -1,40 +1,48 @@
 LIBRILISTEN_PODCASTS
-Librilisten_podcast_id #unique key
-Librivox_book_id
-secret_edit_code
-mon
+Librilisten_podcast_id #unique key, used to retrieve a specific entry (and to know which rss file to retrieve)
+Librivox_rss_url #the link of the Librivox rss url, retrieved every time a new chapter is published
+secret_edit_code #used when the user requests an edit
+mon #boolean of whether to publish on Monday (all days follow this pattern)
 tues
 wed
 thurs
 fri
 sat
 sun
-is_done
-next_chapter
-skip_next (int)
-CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_book_id INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, next_chapter INT NOT NULL, skip_next INT NOT NULL);
+is_done #boolean of whether there are more chapters to publish
+skip_next (int) #int used to skip a certain num of chapters (decremented every time a chapter publication is skipped)
 
-
-~~~~~~~~~~~~
-New version LIBRILISTEN_PODCASTS
-Librilisten_podcast_id #unique key
-Librivox_rss_url
-secret_edit_code
-mon
-tues
-wed
-thurs
-fri
-sat
-sun
-is_done
-skip_next (int)
-CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_book_id INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, next_chapter INT NOT NULL, skip_next INT NOT NULL);
+CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL);
 
 
 Make a database which contains chapters:
-Librilisten_podcast_id
+Librilisten_podcast_id #Identifies which podcast this chapter goes with
 Chapter_num
-Pub_date (if null, hasn't been published)
+Pub_date  #if null, hasn't been published; otherwise, it's the date that the chapter was published
 
-Find the first chapter which hasn't been published, and that's the next one to publish
+CREATE TABLE librilisten_chapters (Librilisten_podcast_id VARCHAR(1000) NOT NULL, chapter_num INT NOT NULL, pub_date DATETIME);
+
+~~~~~~~~~~~~~~
+
+Use cases:
+
+1. Making a new podcast:
+
+Store the podcast: INSERT INTO librilisten_podcasts VALUES ([newly generated id], [url of original rss], [newly generated edit code], [mon], [tues], [wed], [thurs], [fri], [sat], [sun], false, 0);
+
+Store the chapters: 
+var query = 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], [current date and time]); ';
+
+for(i starting at 1 through the rest of the chapters) {
+	query += 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], null)'
+}
+run the query
+
+Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
+
+
+
+2. Update all podcasts:
+
+Retrieve the original rss link: SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false;
+
