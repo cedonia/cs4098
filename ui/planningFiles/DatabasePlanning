@@ -31,8 +31,7 @@ Use cases:
 Store the podcast: INSERT INTO librilisten_podcasts VALUES ([newly generated id], [url of original rss], [newly generated edit code], [mon], [tues], [wed], [thurs], [fri], [sat], [sun], false, 0);
 
 Store the chapters: 
-var query = 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], [current date and time]); ';
-
+var query = 'INSERT INTO librilisten_chapters VALUES ([newly generated id], 0, [current date and time]); ';
 for(i starting at 1 through the rest of the chapters) {
 	query += 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], null)'
 }
@@ -42,7 +41,29 @@ Generate the rss file: Take the current date and time and the original rss url a
 
 
 
-2. Update all podcasts:
+2. Update all podcasts which should be:
 
-Retrieve the original rss link: SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false;
+SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & [currentDay] = true;
+
+For each row of the result:
+* Retrieve the original rss file using Librivox_rss_url and parse it
+* Get the chapters: SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id] & Pub_date != null;
+* Loop through the rows of chapters; for each one, add pub date to the corresponding rss chapter object
+* Set the newest chapter object with today's pub date, then add that to the database: UPDATE librilisten_chapters SET Pub_date=[today] WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id] & Chapter_num = [next chapter num]
+* Calculate whether there will be another chapter by checking the rss object to see if the array of objects has any more entries (before chopping off all other unpublished chapters)
+	- If the last chapter was just published: UPDATE librilisten_podcasts SET is_done = true WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id]
+			- Consider deleting the librilisten_chapters entries as well to save space.
+
+	- else: don't need to do anything.
+
+
+
+3. Decrement the amount of chapters to skip for the podcasts which are currently paused (skip_next is the num of chapters to skip):
+SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 & [currentDate] = true;
+
+var query = '';
+For each row of the result:
+	query += 'UPDATE librilisten_podcasts SET skip_next = ' + row.skipNext - 1 WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id];
+Run the query
+
 
