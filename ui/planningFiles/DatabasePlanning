@@ -1,4 +1,3 @@
-LIBRILISTEN_PODCASTS
 Librilisten_podcast_id #unique key, used to retrieve a specific entry (and to know which rss file to retrieve)
 Librivox_rss_url #the link of the Librivox rss url, retrieved every time a new chapter is published
 secret_edit_code #used when the user requests an edit
@@ -11,8 +10,10 @@ sat
 sun
 is_done #boolean of whether there are more chapters to publish
 skip_next (int) #int used to skip a certain num of chapters (decremented every time a chapter publication is skipped)
+title #the name of the book (these are included in case the UI wants to print "your Pride & Prejudice podcast has been made" etc.)
+author #the author of the book
 
-CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL);
+CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL, title VARCHAR(1000), author VARCHAR(1000));
 
 
 Make a database which contains chapters:
