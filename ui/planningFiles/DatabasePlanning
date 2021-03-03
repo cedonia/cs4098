@@ -9,7 +9,7 @@ fri
 sat
 sun
 is_done #boolean of whether there are more chapters to publish
-skip_next (int) #int used to skip a certain num of chapters (decremented every time a chapter publication is skipped)
+skip_next (int) #int used to skip a certain num of publishing days (decremented every time a chapter publication is skipped)
 title #the name of the book (these are included in case the UI wants to print "your Pride & Prejudice podcast has been made" etc.)
 author #the author of the book
 
