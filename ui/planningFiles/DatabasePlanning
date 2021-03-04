@@ -10,10 +10,8 @@ sat
 sun
 is_done #boolean of whether there are more chapters to publish
 skip_next (int) #int used to skip a certain num of publishing days (decremented every time a chapter publication is skipped)
-title #the name of the book (these are included in case the UI wants to print "your Pride & Prejudice podcast has been made" etc.)
-author #the author of the book
 
-CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL, title VARCHAR(1000), author VARCHAR(1000));
+CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL);
 
 
 Make a database which contains chapters:
@@ -22,6 +20,14 @@ Chapter_num
 Pub_date  #if null, hasn't been published; otherwise, it's the date that the chapter was published
 
 CREATE TABLE librilisten_chapters (Librilisten_podcast_id VARCHAR(1000) NOT NULL, chapter_num INT NOT NULL, pub_date DATETIME);
+
+
+Create a table to store the title and author info for a book in case the UI ever wants it:
+Librivox_rss_url
+title
+author
+
+CREATE TABLE librivox_books (Librivox_rss_url INT NOT NULL, title VARCHAR(1000), author VARCHAR(1000));
 
 ~~~~~~~~~~~~~~
 
@@ -66,5 +72,12 @@ var query = '';
 For each row of the result:
 	query += 'UPDATE librilisten_podcasts SET skip_next = ' + row.skipNext - 1 WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id];
 Run the query
+
+4. Retrieve the author and title of a book using the secret edit code provided by the user:
+    
+    SELECT title, author FROM librilisten_podcasts JOIN librivox_books ON librilisten_podcasts.Librivox_rss_url = librivox_books.librivox_rss_url WHERE secret_edit_code = [the secret edit code];
+    
+5. Retrieve the author and title of a book using the Librilisten_podcast_id:
+    SELECT title, author FROM librilisten_podcasts, librivox_books WHERE Librilisten_podcast_id = [podcast id] AND librilisten_podcasts.librivox_rss_url = librivox_books.librivox_rss_url;
 
 
