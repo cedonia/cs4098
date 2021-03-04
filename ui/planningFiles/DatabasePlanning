@@ -11,9 +11,22 @@ sun
 is_done #boolean of whether there are more chapters to publish
 skip_next (int) #int used to skip a certain num of publishing days (decremented every time a chapter publication is skipped)
 
-CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), 
-mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL, 
-PRIMARY KEY (Librilisten_podcast_id), UNIQUE (secret_edit_code));
+CREATE TABLE librilisten_podcasts (
+	Librilisten_podcast_id VARCHAR(1000) NOT NULL, 
+	Librivox_rss_url INT NOT NULL, 
+	secret_edit_code VARCHAR(1000), 
+	mon BOOL, 
+	tues BOOL, 
+	wed BOOL, 
+	thurs BOOL, 
+	fri BOOL, 
+	sat BOOL, 
+	sun BOOL, 
+	is_done BOOL, 
+	skip_next INT NOT NULL, 
+	PRIMARY KEY (Librilisten_podcast_id), 
+	UNIQUE (secret_edit_code)
+);
 
 
 Make a database which contains chapters:
@@ -21,9 +34,15 @@ Librilisten_podcast_id #Identifies which podcast this chapter goes with
 Chapter_num
 Pub_date  #if null, hasn't been published; otherwise, it's the date that the chapter was published
 
-CREATE TABLE librilisten_chapters (Librilisten_podcast_id VARCHAR(1000) NOT NULL, chapter_num INT NOT NULL, pub_date DATETIME, 
-PRIMARY KEY (Librilisten_podcast_id, Chapter_num),
-FOREIGN KEY (Librilisten_podcast_id) REFERENCES librilisten_podcasts(Librilisten_podcast_id) ON DELETE CASCADE);
+CREATE TABLE librilisten_chapters (
+	Librilisten_podcast_id VARCHAR(1000) NOT NULL, 
+	chapter_num INT NOT NULL, 
+	pub_date DATETIME, 
+	PRIMARY KEY (Librilisten_podcast_id, Chapter_num),
+	FOREIGN KEY (Librilisten_podcast_id) 
+		REFERENCES librilisten_podcasts(Librilisten_podcast_id) 
+		ON DELETE CASCADE)
+);
 
 
 Create a table to store the title and author info for a book in case the UI ever wants it:
@@ -31,8 +50,12 @@ Librivox_rss_url
 title
 author
 
-CREATE TABLE librivox_books (Librivox_rss_url INT NOT NULL, title VARCHAR(1000), author VARCHAR(1000), 
-PRIMARY KEY (Librivox_rss_url));
+CREATE TABLE librivox_books (
+	Librivox_rss_url INT NOT NULL, 
+	title VARCHAR(1000), 
+	author VARCHAR(1000), #Didn't do NOT NULL on these just in case.
+	PRIMARY KEY (Librivox_rss_url)
+);
 
 ~~~~~~~~~~~~~~
 
@@ -40,13 +63,16 @@ Use cases:
 
 1. Making a new podcast:
 
-Store the podcast: INSERT INTO librilisten_podcasts VALUES ([newly generated id], [url of original rss], [newly generated edit code], [mon], [tues], [wed], [thurs], [fri], [sat], [sun], false, 0);
+Store the podcast: 
+INSERT INTO librilisten_podcasts 
+VALUES ([newly generated id], [url of original rss], [newly generated edit code], [mon], [tues], [wed], [thurs], [fri], [sat], [sun], false, 0);
 
 Store the chapters: 
 var query = 'INSERT INTO librilisten_chapters VALUES ([newly generated id], 0, [current date and time]); ';
 for(i starting at 1 through the rest of the chapters) {
 	query += 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], null)'
 }
+query+=";"
 run the query
 
 Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
@@ -55,15 +81,26 @@ Generate the rss file: Take the current date and time and the original rss url a
 
 2. Update all podcasts which should be:
 
-SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & [currentDay] = true;
+SELECT Librivox_rss_url, Librilisten_podcast_id 
+FROM librilisten_podcasts 
+WHERE is_done = false 
+AND skip_next = 0 & [currentDay] = true;
 
 For each row of the result:
 * Retrieve the original rss file using Librivox_rss_url and parse it
-* Get the chapters: SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id] & Pub_date != null;
+* Get the chapters: 
+	SELECT Chapter_num, Pub_date 
+	FROM librilisten_chapters 
+	WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id] & Pub_date != null;
 * Loop through the rows of chapters; for each one, add pub date to the corresponding rss chapter object
-* Set the newest chapter object with today's pub date, then add that to the database: UPDATE librilisten_chapters SET Pub_date=[today] WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id] & Chapter_num = [next chapter num]
+* Set the newest chapter object with today's pub date, then add that to the database: 
+	UPDATE librilisten_chapters 
+	SET Pub_date=[today] 
+	WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id] & Chapter_num = [next chapter num]
 * Calculate whether there will be another chapter by checking the rss object to see if the array of objects has any more entries (before chopping off all other unpublished chapters)
-	- If the last chapter was just published: UPDATE librilisten_podcasts SET is_done = true WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id]
+	- If the last chapter was just published: 
+		UPDATE librilisten_podcasts SET is_done = true 
+		WHERE Librilisten_podcast_id = [row.Librilisten_podcast_id]
 			- Consider deleting the librilisten_chapters entries as well to save space.
 
 	- else: don't need to do anything.
@@ -71,7 +108,9 @@ For each row of the result:
 
 
 3. Decrement the amount of chapters to skip for the podcasts which are currently paused (skip_next is the num of chapters to skip):
-SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 & [currentDate] = true;
+SELECT Librilisten_podcast_id, skip_next 
+FROM librilisten_podcasts 
+WHERE skip_next > 0 & [currentDate] = true;
 
 var query = '';
 For each row of the result:
@@ -80,9 +119,16 @@ Run the query
 
 4. Retrieve the author and title of a book using the secret edit code provided by the user:
     
-    SELECT title, author FROM librilisten_podcasts JOIN librivox_books ON librilisten_podcasts.Librivox_rss_url = librivox_books.librivox_rss_url WHERE secret_edit_code = [the secret edit code];
+    SELECT title, author 
+    FROM librilisten_podcasts 
+    JOIN librivox_books 
+    ON librilisten_podcasts.Librivox_rss_url = librivox_books.librivox_rss_url 
+    WHERE secret_edit_code = [the secret edit code];
     
 5. Retrieve the author and title of a book using the Librilisten_podcast_id:
-    SELECT title, author FROM librilisten_podcasts, librivox_books WHERE Librilisten_podcast_id = [podcast id] AND librilisten_podcasts.librivox_rss_url = librivox_books.librivox_rss_url;
+    SELECT title, author 
+    FROM librilisten_podcasts, librivox_books 
+    WHERE Librilisten_podcast_id = [podcast id] 
+    AND librilisten_podcasts.librivox_rss_url = librivox_books.librivox_rss_url;
 
 
