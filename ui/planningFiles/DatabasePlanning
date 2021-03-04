@@ -11,7 +11,9 @@ sun
 is_done #boolean of whether there are more chapters to publish
 skip_next (int) #int used to skip a certain num of publishing days (decremented every time a chapter publication is skipped)
 
-CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL);
+CREATE TABLE librilisten_podcasts (Librilisten_podcast_id VARCHAR(1000) NOT NULL, Librivox_rss_url INT NOT NULL, secret_edit_code VARCHAR(1000), 
+mon BOOL, tues BOOL, wed BOOL, thurs BOOL, fri BOOL, sat BOOL, sun BOOL, is_done BOOL, skip_next INT NOT NULL, 
+PRIMARY KEY (Librilisten_podcast_id), UNIQUE (secret_edit_code));
 
 
 Make a database which contains chapters:
@@ -19,7 +21,9 @@ Librilisten_podcast_id #Identifies which podcast this chapter goes with
 Chapter_num
 Pub_date  #if null, hasn't been published; otherwise, it's the date that the chapter was published
 
-CREATE TABLE librilisten_chapters (Librilisten_podcast_id VARCHAR(1000) NOT NULL, chapter_num INT NOT NULL, pub_date DATETIME);
+CREATE TABLE librilisten_chapters (Librilisten_podcast_id VARCHAR(1000) NOT NULL, chapter_num INT NOT NULL, pub_date DATETIME, 
+PRIMARY KEY (Librilisten_podcast_id, Chapter_num),
+FOREIGN KEY (Librilisten_podcast_id) REFERENCES librilisten_podcasts(Librilisten_podcast_id) ON DELETE CASCADE);
 
 
 Create a table to store the title and author info for a book in case the UI ever wants it:
@@ -27,7 +31,8 @@ Librivox_rss_url
 title
 author
 
-CREATE TABLE librivox_books (Librivox_rss_url INT NOT NULL, title VARCHAR(1000), author VARCHAR(1000));
+CREATE TABLE librivox_books (Librivox_rss_url INT NOT NULL, title VARCHAR(1000), author VARCHAR(1000), 
+PRIMARY KEY (Librivox_rss_url));
 
 ~~~~~~~~~~~~~~
 
