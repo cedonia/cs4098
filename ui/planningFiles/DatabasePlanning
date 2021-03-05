@@ -25,7 +25,9 @@ CREATE TABLE librilisten_podcasts (
 	is_done BOOL, 
 	skip_next INT NOT NULL, 
 	PRIMARY KEY (Librilisten_podcast_id), 
-	UNIQUE (secret_edit_code)
+	UNIQUE (secret_edit_code),
+	FOREIGN KEY (Librivox_rss_url)
+		REFERENCEs librivox_books(Librox_rss_url)
 );
 
 
@@ -76,6 +78,8 @@ query+=";"
 run the query
 
 Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
+
+****TODO: adding librivox_books!
 
 
 
