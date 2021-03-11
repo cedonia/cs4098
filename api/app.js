@@ -113,9 +113,15 @@ let calcCurrentTimeString = (() => {
 	const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 	const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-	let dateTime = days[ts.getUTCDay()] + ', ' + ts.getUTCDate() + ' ' + months[ts.getUTCMonth()] + ' ' + ts.getUTCFullYear() + ' ' + ts.getUTCHours() + ':' + ts.getUTCMinutes() + ':' + ts.getUTCSeconds() + ' UTC';
+	let dateTime = days[ts.getUTCDay()] + ', ' + ts.getUTCDate() + ' ' + months[ts.getUTCMonth()] + ' ' + ts.getUTCFullYear() + ' ' + makeNumTwoDigits(ts.getUTCHours()) + ':' + makeNumTwoDigits(ts.getUTCMinutes()) + ':' + makeNumTwoDigits(ts.getUTCSeconds()) + ' UTC';
 	console.log(dateTime);
 	return dateTime;
+});
+
+let makeNumTwoDigits = ((num) => {
+	if(num >= 10) return num;
+
+	return '0' + num;
 });
 
 let genFile = (async (librilisten_id, next_chapter, url_rss) => {
