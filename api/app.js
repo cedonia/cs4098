@@ -34,8 +34,6 @@ app.get('/api', async(req, res) => {
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
 app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
-	console.log("REQ: " + req);
-
     //Drop "the" if it's at the start of the title
 	if(req.params.title.startsWith("The")) {
 		req.params.title = req.params.title.slice(6);
@@ -50,7 +48,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
-		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.params.mon + ', ' + req.params.tues + ', ' + req.params.wed + ', ' + req.params.thurs + ', ' + req.params.fri + ', ' + req.sat + ', ' + req.sun + ', false, 0);';
+		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
 		console.log("QUERY: " + podcastsQuery);
 		databaseQuery(podcastsQuery);
