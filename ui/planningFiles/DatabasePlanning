@@ -39,7 +39,7 @@ Pub_date  #if null, hasn't been published; otherwise, it's the date that the cha
 CREATE TABLE librilisten_chapters (
 	Librilisten_podcast_id VARCHAR(1000) NOT NULL, 
 	chapter_num INT NOT NULL, 
-	pub_date DATETIME, 
+	pub_date VARCHAR(1000), 
 	PRIMARY KEY (Librilisten_podcast_id, Chapter_num),
 	FOREIGN KEY (Librilisten_podcast_id) 
 		REFERENCES librilisten_podcasts(Librilisten_podcast_id) 
