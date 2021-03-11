@@ -13,8 +13,8 @@ skip_next (int) #int used to skip a certain num of publishing days (decremented 
 
 CREATE TABLE librilisten_podcasts (
 	Librilisten_podcast_id VARCHAR(1000) NOT NULL, 
-	Librivox_rss_url INT NOT NULL, 
-	secret_edit_code VARCHAR(1000), 
+	Librivox_rss_url VARCHAR (1000) NOT NULL, 
+	secret_edit_code VARCHAR(1000) NOT NULL, 
 	mon BOOL, 
 	tues BOOL, 
 	wed BOOL, 
@@ -27,7 +27,7 @@ CREATE TABLE librilisten_podcasts (
 	PRIMARY KEY (Librilisten_podcast_id), 
 	UNIQUE (secret_edit_code),
 	FOREIGN KEY (Librivox_rss_url)
-		REFERENCEs librivox_books(Librox_rss_url)
+		REFERENCES librivox_books(Librivox_rss_url)
 );
 
 
@@ -43,7 +43,7 @@ CREATE TABLE librilisten_chapters (
 	PRIMARY KEY (Librilisten_podcast_id, Chapter_num),
 	FOREIGN KEY (Librilisten_podcast_id) 
 		REFERENCES librilisten_podcasts(Librilisten_podcast_id) 
-		ON DELETE CASCADE)
+		ON DELETE CASCADE
 );
 
 
@@ -53,7 +53,7 @@ title
 author
 
 CREATE TABLE librivox_books (
-	Librivox_rss_url INT NOT NULL, 
+	Librivox_rss_url VARCHAR(1000), 
 	title VARCHAR(1000), 
 	author VARCHAR(1000), #Didn't do NOT NULL on these just in case.
 	PRIMARY KEY (Librivox_rss_url)
