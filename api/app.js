@@ -49,7 +49,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	const currentDateTime = calcCurrentTimeString();
 
 	//Retrieve the rss url from Librivox and make the podcast database entry
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss, num_sections}')
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}')
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
