@@ -34,6 +34,8 @@ app.get('/api', async(req, res) => {
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
 app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
+	console.log("REQ: " + req);
+
     //Drop "the" if it's at the start of the title
 	if(req.params.title.startsWith("The")) {
 		req.params.title = req.params.title.slice(6);
