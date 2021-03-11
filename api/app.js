@@ -32,15 +32,49 @@ app.get('/api', async(req, res) => {
 });
 
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
-app.get('/api/GenPodcast/title/:title/daysOfTheWeek/:daysOfTheWeek', async (req, res) => {
-	console.log(req.params.title);
+app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
+    //Drop "the" if it's at the start of the title
 	if(req.params.title.startsWith("The")) {
 		req.params.title = req.params.title.slice(6);
 	}
 
+	//Generate new id and edit code
 	let librilisten_id = uuid();
 	let secret_edit_code = uuid();
+
+	//Retrieve the rss url from Librivox and make the podcast database entry
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={url_rss}')
+	.then(response => {
+		const url_rss = response.data.books[0].url_rss;
+
+		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.mon + ', ' + req.tues + ', ' + req.wed + ', ' + req.thurs + ', ' + req.fri + ', ' + req.sat + ', ' + req.sun + ', false, 0);';
+
+		databaseQuery(podcastsQuery);
+
+	});
+
+	//Store the chapters
+
+	/***
+
+
+Store the chapters: 
+var query = 'INSERT INTO librilisten_chapters VALUES ([newly generated id], 0, [current date and time]); ';
+for(i starting at 1 through the rest of the chapters) {
+	query += 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], null)'
+}
+query+=";"
+run the query
+
+Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
+
+****TODO: adding librivox_books!
+
+
+	**/
+
+	/**
 
 	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss,authors,num_sections}',
     {
@@ -66,6 +100,8 @@ app.get('/api/GenPodcast/title/:title/daysOfTheWeek/:daysOfTheWeek', async (req,
     .catch((err) => {
     	console.log(err)// or have an explicit error class and assign its properties
     });
+
+    **/
 });
 
 let genFile = (async (librilisten_id, next_chapter, url_rss) => {
@@ -90,6 +126,24 @@ let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 				//TODO: simplify the database
 	});
 
+});
+
+let databaseQuery = (async (query) => {
+	var connection = mysql.createConnection({
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
+		});
+	connection.connect();
+
+
+	connection.query(query, function(err, rows, fields) {
+		if (err) throw err;
+	});
+
+	connection.end();
 });
 
 let storeDatabase = (async (data, librilisten_id, secret_edit_code, daysOfTheWeek) => {
