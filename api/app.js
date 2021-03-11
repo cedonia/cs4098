@@ -1,21 +1,14 @@
 const express = require('express');
 const app = express();
-
 const mysql = require('mysql');
 const fs = require('fs');
-
 const axios = require('axios');
-
 const hostname = '127.0.0.1';
 const port = 21257;
-
 var cors = require('cors');
-
 var database = require('./database.js');
 let parser = require('xml2js');
-
 const { uuid } = require('uuidv4');
-
 const rss = require('rss');
 
 
@@ -53,85 +46,62 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
+		//Develop necessary queries
 		const book = 'INSERT INTO librivox_books VALUES (\'' + url_rss + '\', \'' + req.params.title + '\', null);';
 		const podcast = 'INSERT INTO librilisten_podcasts VALUES (\'' + librilisten_id + '\', \'' + url_rss + '\', \'' + secret_edit_code + '\', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
-
 		var chapters = 'INSERT INTO librilisten_chapters VALUES (\'' + librilisten_id + '\', 0, \'' + currentDateTime + '\')';
 
-		console.log("NUM SECTIONS: " + response.data.books[0].num_sections);
-
+		//Add additional entries for each chapter
 		for(var i = 1; i < response.data.books[0].num_sections; i++) {
 			//TODO: CAN ONLY DO 1000 QUERIES IN ONE GO!
 			chapters = chapters + ', (\'' + librilisten_id + '\', ' + i + ', null)';
 		}
 		chapters = chapters + ';';
 
+		//Make the queries to the database
 		threeDatabaseQueries(book, podcast, chapters);
 
+		// genInitialFile();
+
+	})
+	.catch((err) => {
+		console.log(err);
+		//TODO: return meaningful error message
+	});
+
+	res.status(200).json({
+		secret_edit_link: secret_edit_code,
+		url_rss: librilisten_id
 	});
 
 	
 
 	/***
 
-
-Store the chapters: 
-var query = 'INSERT INTO librilisten_chapters VALUES ([newly generated id], 0, [current date and time]); ';
-for(i starting at 1 through the rest of the chapters) {
-	query += 'INSERT INTO librilisten_chapters VALUES ([newly generated id], [i], null)'
-}
-query+=";"
-run the query
-
 Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
 
 	**/
-
-	/**
-
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={id,title,url_rss,authors,num_sections}',
-    {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:3000/'
-      }
-    }
-    )
-    .then(response => {
-    	const data = response.data.books[0]
-    	console.log(data);
-
-    	genFile(librilisten_id, 1, data.url_rss);
-
-    	storeDatabase(data, librilisten_id, secret_edit_code, req.params.daysOfTheWeek);
-
-		res.status(200).json({
-		secret_edit_link: secret_edit_code,
-		url_rss: librilisten_id
-	});
-    })
-    .catch((err) => {
-    	console.log(err)// or have an explicit error class and assign its properties
-    });
-
-    **/
 });
 
-let calcCurrentTimeString = (() => {
-	let ts = new Date();
+let genInitialFile = (async (dateTime, url_rss) => {
+	axios.get(url_rss)
+	.then(response => {
+		const rss_feed = response.data;
 
-	const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
-	const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		parser.parseString(rss_feed, function (err, result) {
+			const chapters = result.rss.channel[0].item;
+			chapters.splice(next_chapter);
 
-	let dateTime = days[ts.getUTCDay()] + ', ' + ts.getUTCDate() + ' ' + months[ts.getUTCMonth()] + ' ' + ts.getUTCFullYear() + ' ' + makeNumTwoDigits(ts.getUTCHours()) + ':' + makeNumTwoDigits(ts.getUTCMinutes()) + ':' + makeNumTwoDigits(ts.getUTCSeconds()) + ' GMT';
-	console.log(dateTime);
-	return dateTime;
-});
+			//TODO: Add the pub dates from the old chapters, and the one for this new one.
 
-let makeNumTwoDigits = ((num) => {
-	if(num >= 10) return num;
+			var builder = new parser.Builder();
+			var xml = builder.buildObject(result);
 
-	return '0' + num;
+			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+				if (err) return console.log(err);
+			});
+		});
+	})
 });
 
 let genFile = (async (librilisten_id, next_chapter, url_rss) => {
@@ -156,6 +126,23 @@ let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 				//TODO: simplify the database
 	});
 
+});
+
+let calcCurrentTimeString = (() => {
+	let ts = new Date();
+
+	const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+	const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+	let dateTime = days[ts.getUTCDay()] + ', ' + ts.getUTCDate() + ' ' + months[ts.getUTCMonth()] + ' ' + ts.getUTCFullYear() + ' ' + makeNumTwoDigits(ts.getUTCHours()) + ':' + makeNumTwoDigits(ts.getUTCMinutes()) + ':' + makeNumTwoDigits(ts.getUTCSeconds()) + ' GMT';
+	console.log(dateTime);
+	return dateTime;
+});
+
+let makeNumTwoDigits = ((num) => {
+	if(num >= 10) return num;
+
+	return '0' + num;
 });
 
 let databaseQuery = (async (query) => {
@@ -201,34 +188,6 @@ let threeDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_qu
 		});
 	})
 
-});
-
-let storeDatabase = (async (data, librilisten_id, secret_edit_code, daysOfTheWeek) => {
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-		});
-	connection.connect();
-
-	//TODO: ACTUALLY PUT IN THE DAYS OF THE WEEK
-
-	//Store ref to a new podcast the librilisten_podcasts table
-	connection.query("INSERT INTO librilisten_podcasts VALUES (\'"+ librilisten_id + "\', " + data.url_rss + ", \'" + secret_edit_code + "\', true, false, false, false, false, false, false, false, 1, 0)", function(err, rows, fields) {
-		if (err) throw err;
-		// console.log(rows);
-	});
-
-	//TODO: store the first chapter with the current date as the pub date!
-
-	connection.end();
-})
-
-//TODO IS THIS A GET?
-app.get('/api/edit/:secret', async (req, res) => {
-	//TODO MAKE SURE THIS CAN'T BE ACCESSED WHEN IT SHOULDN'T BE
 });
 
 app.get('/api/update', async (req, res) => {
