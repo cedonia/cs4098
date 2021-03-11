@@ -105,7 +105,7 @@ Generate the rss file: Take the current date and time and the original rss url a
     **/
 });
 
-let StrToBool = ((str) => {
+let strToBool = ((str) => {
 	if(str === 'true') return true;
 	else if(str === 'false') return false;
 	else return null;
