@@ -56,8 +56,6 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		const book = 'INSERT INTO librivox_books VALUES (\'' + url_rss + '\', \'' + req.params.title + '\', null);';
 		const podcast = 'INSERT INTO librilisten_podcasts VALUES (\'' + librilisten_id + '\', \'' + url_rss + '\', \'' + secret_edit_code + '\', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
-		twoDatabaseQueries(book, podcast);
-
 		var chapters = 'INSERT INTO librilisten_chapters VALUES (\'' + librilisten_id + '\', 0, \'' + currentDateTime + '\')';
 		for(var i = 1; i < response.data.books[0].num_sections; i++) {
 			//TODO: CAN ONLY DO 1000 QUERIES IN ONE GO!
@@ -65,7 +63,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		}
 		chapters = chapters + ';';
 
-		databaseQuery(chapters);
+		threeDatabaseQueries(book, podcast, chapters);
 
 	});
 
@@ -176,7 +174,7 @@ let databaseQuery = (async (query) => {
 });
 
 //TODO : RENAME THIS IS ONLY FOR THE INITIAL SETUP
-let twoDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_query) => {
+let threeDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_query, librilisten_chapters_query) => {
 	var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
 			database : process.env.database, //librilisten
@@ -192,7 +190,11 @@ let twoDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_quer
 
 		connection.query(librilisten_podcasts_query, function(err, rows, fields) {
 			if(err) throw err;
-			connection.end();
+
+			connection.query(librilisten_chapters_query, function(err, rows, fields) {
+				if(err) throw err;
+				connection.end();
+			})
 		});
 	})
 
