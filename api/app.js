@@ -56,7 +56,16 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		const book = 'INSERT INTO librivox_books VALUES (\'' + url_rss + '\', \'' + req.params.title + '\', null);';
 		const podcast = 'INSERT INTO librilisten_podcasts VALUES (\'' + librilisten_id + '\', \'' + url_rss + '\', \'' + secret_edit_code + '\', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
-		twoDatabaseQueries(book, podcast);
+		await twoDatabaseQueries(book, podcast);
+
+		var chapters = 'INSERT INTO librilisten_chapters VALUES (\'' + librilisten_id + '\', 0, \'' + currentDateTime + '\')';
+		for(var i = 1; i < response.data.books[0].num_sections; i++) {
+			//TODO: CAN ONLY DO 1000 QUERIES IN ONE GO!
+			chapters = chapters + ', (\'' + librilisten_id + '\', ' + i + ', null)';
+		}
+		chapters = chapters + ';';
+
+		await databaseQuery(chapters);
 
 	});
 
