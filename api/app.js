@@ -50,7 +50,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
-		const podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null)';
+		const podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null);';
 
 		podcastsQuery = podcastQuery + ' INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
