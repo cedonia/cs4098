@@ -45,8 +45,11 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	let librilisten_id = uuid();
 	let secret_edit_code = uuid();
 
+	//Record current date and time
+	const currentDateTime = calcCurrentTimeString();
+
 	//Retrieve the rss url from Librivox and make the podcast database entry
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss}')
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss, num_sections}')
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
@@ -102,6 +105,17 @@ Generate the rss file: Take the current date and time and the original rss url a
     });
 
     **/
+});
+
+let calcCurrentTimeString = (() => {
+	let ts = new Date();
+
+	const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+	const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+	let dateTime = days[ts.getDay()] + ' ' + months[ts.getMonth() + ' ' + ts.getYear() + ' 09:00:00 PDT'];
+	console.log("DATE TIME: " + dateTime);
+	return dateTime;
 });
 
 let genFile = (async (librilisten_id, next_chapter, url_rss) => {
