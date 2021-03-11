@@ -50,7 +50,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
-		const podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null);';
+		var podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null);';
 
 		console.log("QUERY: " + podcastQuery);
 		databaseQuery(podcastQuery);
