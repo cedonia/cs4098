@@ -162,10 +162,10 @@ let twoDatabaseQueries = (async (query1, query2) => {
 
 		connection.query(query2, function(err, rows, fields) {
 			if(err) throw err;
+			connection.end();
 		});
 	})
 
-	connection.end();
 });
 
 let storeDatabase = (async (data, librilisten_id, secret_edit_code, daysOfTheWeek) => {
