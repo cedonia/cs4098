@@ -34,9 +34,11 @@ app.get('/api', async(req, res) => {
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
 app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
+	const formattedTitle = req.params.title;
+
     //Drop "the" if it's at the start of the title
-	if(req.params.title.startsWith("The")) {
-		req.params.title = req.params.title.slice(6);
+	if(formattedTitle.startsWith("The")) {
+		formattedTitle = formattedTitle.slice(6);
 	}
 
 	//Generate new id and edit code
@@ -44,20 +46,20 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	let secret_edit_code = uuid();
 
 	//Retrieve the rss url from Librivox and make the podcast database entry
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + req.params.title + '&&fields={url_rss}')
+	axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss}')
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
+		const podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null)';
 
-
-		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
+		podcastsQuery += ' INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
 		console.log("QUERY: " + podcastsQuery);
 		databaseQuery(podcastsQuery);
 
 	});
 
-	//Store the chapters
+	
 
 	/***
 
@@ -71,9 +73,6 @@ query+=";"
 run the query
 
 Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
-
-****TODO: adding librivox_books!
-
 
 	**/
 
