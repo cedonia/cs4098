@@ -50,15 +50,10 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
-		var podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null);';
+		const book = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null);';
+		const podcast = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
-		console.log("QUERY: " + podcastQuery);
-		databaseQuery(podcastQuery);
-
-		podcastQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
-
-		console.log("QUERY: " + podcastQuery);
-		databaseQuery(podcastQuery);
+		twoDatabaseQueries(book, podcast);
 
 	});
 
@@ -146,7 +141,29 @@ let databaseQuery = (async (query) => {
 
 	connection.query(query, function(err, rows, fields) {
 		if (err) throw err;
-	});
+	})
+
+	connection.end();
+});
+
+let twoDatabaseQueries = (async (query1, query2) => {
+	var connection = mysql.createConnection({
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
+		});
+	connection.connect();
+
+
+	connection.query(query1, function(err, rows, fields) {
+		if (err) throw err;
+
+		connection.query(query2, function(err, rows, fields) {
+			if(err) throw err;
+		});
+	})
 
 	connection.end();
 });
