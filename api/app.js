@@ -48,7 +48,9 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
-		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + strToBool(req.query.mon) + ', ' + strToBool(req.query.tues) + ', ' + strToBool(req.query.wed) + ', ' + strToBool(req.query.thurs) + ', ' + strToBool(req.query.fri) + ', ' + strToBool(req.query.sat) + ', ' + strToBool(req.query.sun) + ', false, 0);';
+
+
+		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
 		console.log("QUERY: " + podcastsQuery);
 		databaseQuery(podcastsQuery);
@@ -103,12 +105,6 @@ Generate the rss file: Take the current date and time and the original rss url a
     });
 
     **/
-});
-
-let strToBool = ((str) => {
-	if(str === 'true') return true;
-	else if(str === 'false') return false;
-	else return null;
 });
 
 let genFile = (async (librilisten_id, next_chapter, url_rss) => {
