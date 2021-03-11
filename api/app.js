@@ -113,8 +113,8 @@ let calcCurrentTimeString = (() => {
 	const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 	const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-	let dateTime = days[ts.getDay()] + ' ' + months[ts.getMonth()] + ' ' + ts.getYear() + ' 09:00:00 PDT';
-	console.log("DATE TIME: " + dateTime);
+	let dateTime = days[ts.getUTCDay()] + ', ' + ts.getUTCDate() + ' ' + months[ts.getUTCMonth()] + ' ' + ts.getUTCFullYear() + ' ' + ts.getUTCHours() + ':' + ts.getUTCMinutes() + ':' + ts.getUTCSeconds() + ' UTC';
+	console.log(dateTime);
 	return dateTime;
 });
 
