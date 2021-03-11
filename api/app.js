@@ -146,7 +146,8 @@ let databaseQuery = (async (query) => {
 	connection.end();
 });
 
-let twoDatabaseQueries = (async (query1, query2) => {
+//TODO : RENAME THIS IS ONLY FOR THE INITIAL SETUP
+let twoDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_query) => {
 	var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
 			database : process.env.database, //librilisten
@@ -157,10 +158,10 @@ let twoDatabaseQueries = (async (query1, query2) => {
 	connection.connect();
 
 
-	connection.query(query1, function(err, rows, fields) {
-		if (err) throw err;
+	connection.query(librivox_books_query, function(err, rows, fields) {
+		if (err) console.log("This book is already in the database.");
 
-		connection.query(query2, function(err, rows, fields) {
+		connection.query(librilisten_podcasts_query, function(err, rows, fields) {
 			if(err) throw err;
 			connection.end();
 		});
