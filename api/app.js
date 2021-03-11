@@ -52,7 +52,10 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
 		const podcastQuery = 'INSERT INTO librivox_books VALUES (' + url_rss + ', ' + req.params.title + ', null);';
 
-		podcastsQuery = podcastQuery + ' INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
+		console.log("QUERY: " + podcastsQuery);
+		databaseQuery(podcastsQuery);
+
+		podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
 
 		console.log("QUERY: " + podcastsQuery);
 		databaseQuery(podcastsQuery);
