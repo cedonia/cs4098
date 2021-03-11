@@ -48,8 +48,9 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(response => {
 		const url_rss = response.data.books[0].url_rss;
 
-		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.mon + ', ' + req.tues + ', ' + req.wed + ', ' + req.thurs + ', ' + req.fri + ', ' + req.sat + ', ' + req.sun + ', false, 0);';
+		const podcastsQuery = 'INSERT INTO librilisten_podcasts VALUES (' + librilisten_id + ', ' + url_rss + ', ' + secret_edit_code + ', ' + req.params.mon + ', ' + req.params.tues + ', ' + req.params.wed + ', ' + req.params.thurs + ', ' + req.params.fri + ', ' + req.sat + ', ' + req.sun + ', false, 0);';
 
+		console.log("QUERY: " + podcastsQuery);
 		databaseQuery(podcastsQuery);
 
 	});
