@@ -25,6 +25,7 @@ app.get('/api', async(req, res) => {
 });
 
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
+//Sample: https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
 app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
 	const formattedTitle = req.params.title;
