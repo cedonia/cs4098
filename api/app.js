@@ -92,8 +92,8 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 		const rss_feed = response.data;
 
 		parser.parseString(rss_feed, function (err, result) {
-			var chapters = result.rss.channel[0].item;
-			chapters = [chapters[0]];
+			const chapters = result.rss.channel[0].item;
+			chapters.splice(1);
 
 			//TODO: Add the pub dates from the old chapters, and the one for this new one.
 
