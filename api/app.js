@@ -196,7 +196,9 @@ let databaseQuery = (async (query) => {
 
 app.get('/api/update', async (req, res) => {
 
-	var currentDay = days[Date.getDay()];
+	var d = new Date();
+
+	var currentDay = days[d.getUTCDay()];
 
 	console.log("Curreent day: " + currentDay);
 
