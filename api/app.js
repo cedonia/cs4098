@@ -62,7 +62,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		//Make the queries to the database
 		threeDatabaseQueries(book, podcast, chapters);
 
-		// genInitialFile();
+		genInitialFile();
 
 	})
 	.catch((err) => {
@@ -91,7 +91,7 @@ let genInitialFile = (async (dateTime, url_rss) => {
 
 		parser.parseString(rss_feed, function (err, result) {
 			const chapters = result.rss.channel[0].item;
-			chapters.splice(next_chapter);
+			chapters = [chapters[0]];
 
 			//TODO: Add the pub dates from the old chapters, and the one for this new one.
 
