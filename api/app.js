@@ -63,7 +63,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		threeDatabaseQueries(book, podcast, chapters)
 		.then((result) => {
 			console.log("MADE IT PAST DATABASE ENTRIES");
-			genInitialFile(currentDateTime, url_rss);
+			genInitialFile(currentDateTime, url_rss, librilisten_id);
 		});
 
 	})
@@ -86,7 +86,7 @@ Generate the rss file: Take the current date and time and the original rss url a
 	**/
 });
 
-let genInitialFile = (async (dateTime, url_rss) => {
+let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 	axios.get(url_rss)
 	.then(response => {
 		const rss_feed = response.data;
