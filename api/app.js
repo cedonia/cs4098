@@ -11,6 +11,9 @@ let parser = require('xml2js');
 const { uuid } = require('uuidv4');
 const rss = require('rss');
 
+const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -77,15 +80,40 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		url_rss: librilisten_id
 	});
 
-	
+});
+
+//TODO : RENAME THIS IS ONLY FOR THE INITIAL SETUP
+let threeDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_query, librilisten_chapters_query) => {
+	var connection = mysql.createConnection({
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
+		});
+	connection.connect();
+
+
+	connection.query(librivox_books_query, function(err, rows, fields) {
+		if (err) console.log("This book is already in the database.");
+
+		connection.query(librilisten_podcasts_query, function(err, rows, fields) {
+			if(err) throw err;
+
+			connection.query(librilisten_chapters_query, function(err, rows, fields) {
+				if(err) throw err;
+				connection.end();
+			})
+		});
+	})
+
+});
 
 	/***
 
 Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
 
 	**/
-});
-
 let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 	axios.get(url_rss)
 	.then(response => {
@@ -136,9 +164,6 @@ let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 let calcCurrentTimeString = (() => {
 	let ts = new Date();
 
-	const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
-	const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 	let dateTime = days[ts.getUTCDay()] + ', ' + ts.getUTCDate() + ' ' + months[ts.getUTCMonth()] + ' ' + ts.getUTCFullYear() + ' ' + makeNumTwoDigits(ts.getUTCHours()) + ':' + makeNumTwoDigits(ts.getUTCMinutes()) + ':' + makeNumTwoDigits(ts.getUTCSeconds()) + ' GMT';
 	console.log(dateTime);
 	return dateTime;
@@ -163,59 +188,41 @@ let databaseQuery = (async (query) => {
 
 	connection.query(query, function(err, rows, fields) {
 		if (err) throw err;
+		connection.end();
+		return rows;
+
 	})
-
-	connection.end();
-});
-
-//TODO : RENAME THIS IS ONLY FOR THE INITIAL SETUP
-let threeDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_query, librilisten_chapters_query) => {
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-		});
-	connection.connect();
-
-
-	connection.query(librivox_books_query, function(err, rows, fields) {
-		if (err) console.log("This book is already in the database.");
-
-		connection.query(librilisten_podcasts_query, function(err, rows, fields) {
-			if(err) throw err;
-
-			connection.query(librilisten_chapters_query, function(err, rows, fields) {
-				if(err) throw err;
-				connection.end();
-			})
-		});
-	})
-
 });
 
 app.get('/api/update', async (req, res) => {
 
+	String currentDay = days[Date.getDay()];
+
+	console.log("Curreent day: " + currentDay);
+
+	String query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
+
+	var rows = databaseQuery(query);
+
 	//todo: calculate current day of the week; for now, assume it's Monday
 
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-		});
-	connection.connect();
+	// var connection = mysql.createConnection({
+	// 		host     : process.env.host, //localhost
+	// 		database : process.env.database, //librilisten
+	// 		port     : process.env.port, //3306
+	// 		user     : process.env.user, //cedonia
+	// 		password : process.env.password,
+	// 	});
+	// connection.connect();
 
-	connection.query("SELECT Librilisten_podcast_id, Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
-		if(err) throw err;
-		console.log(rows);
-		for(var row of rows) {
-			console.log(row.next_chapter);
-			genFile(row.Librilisten_podcast_id, row.next_chapter, row.Librivox_book_id);
-		}
-	});
+	// connection.query("SELECT Librilisten_podcast_id, Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
+	// 	if(err) throw err;
+	// 	console.log(rows);
+	// 	for(var row of rows) {
+	// 		console.log(row.next_chapter);
+	// 		genFile(row.Librilisten_podcast_id, row.next_chapter, row.Librivox_book_id);
+	// 	}
+	// });
 
 
 
