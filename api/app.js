@@ -97,6 +97,8 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			//TODO: Add the pub dates from the old chapters, and the one for this new one.
 
+			console.log("RESULT:" + result);
+
 			var builder = new parser.Builder();
 			var xml = builder.buildObject(result);
 
