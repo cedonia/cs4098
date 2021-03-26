@@ -196,11 +196,11 @@ let databaseQuery = (async (query) => {
 
 app.get('/api/update', async (req, res) => {
 
-	String currentDay = days[Date.getDay()];
+	var currentDay = days[Date.getDay()];
 
 	console.log("Curreent day: " + currentDay);
 
-	String query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
+	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
 
 	var rows = databaseQuery(query);
 
