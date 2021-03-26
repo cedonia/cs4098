@@ -63,7 +63,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		threeDatabaseQueries(book, podcast, chapters)
 		.then((result) => {
 			console.log("MADE IT PAST DATABASE ENTRIES");
-			genInitialFile();
+			genInitialFile(currentDateTime, url_rss);
 		});
 
 	})
