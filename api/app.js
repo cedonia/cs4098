@@ -60,7 +60,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		chapters = chapters + ';';
 
 		//Make the queries to the database
-		threeDatabaseQueries(book, podcast, chapters);
+		await threeDatabaseQueries(book, podcast, chapters);
 
 		console.log("MADE IT PAST DATABASE ENTRIES");
 
