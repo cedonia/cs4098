@@ -137,6 +137,11 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 	})
 });
 
+let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
+	console.log("Update the file!");
+});
+
+//TOD: SHOULD DELETE THIS METHOD I THINK?
 let genFile = (async (librilisten_id, next_chapter, url_rss) => {
 	axios.get(url_rss).then(response => {
 		const rss_feed = response.data;
@@ -175,7 +180,15 @@ let makeNumTwoDigits = ((num) => {
 	return '0' + num;
 });
 
-let databaseQuery = (async (query) => {
+app.get('/api/update', async (req, res) => {
+
+	var d = new Date();
+
+	var currentDay = days[d.getUTCDay()];
+	var currentDateTime = calcCurrentTimeString();
+	console.log("CURRENT DAY : " + currentDay);
+	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
+
 	var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
 			database : process.env.database, //librilisten
@@ -188,28 +201,14 @@ let databaseQuery = (async (query) => {
 
 	connection.query(query, function(err, rows, fields) {
 		if (err) throw err;
-		connection.end();
+
 		for(var row of rows) {
-			console.log(row.Librilisten_podcast_id);
+			genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id);
 		}
-		console.log("DONE PRINTING ROWS IN QUERY METHOD");
+
+		connection.end();
 		return rows;
 
-	})
-});
-
-app.get('/api/update', async (req, res) => {
-
-	var d = new Date();
-
-	var currentDay = days[d.getUTCDay()];
-	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
-
-	var rows = databaseQuery(query)
-	.then((rows) => {
-		for(var row of rows) {
-			console.log(row.Librilisten_podcast_id);
-		}
 	});
 	
 
