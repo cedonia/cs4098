@@ -142,8 +142,6 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 	axios.get(url_rss)
 	.then(response => {
 		const rss_feed = response.data;
-		const chapters = rss_feed.rss.channel[0].item;
-		console.log(chapters);
 
 		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' & Pub_date != null;";
 
