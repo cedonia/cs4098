@@ -142,6 +142,8 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 	axios.get(url_rss)
 	.then(response => {
 		const rss_feed = response.data;
+		const chapters = rss_feed.rss.channel[0].item;
+		console.log(chapters);
 
 		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' & Pub_date != null;";
 
@@ -157,7 +159,13 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 		connection.query(query, function(err, rows, fields) {
 			if (err) throw err;
 
-			console.log("NUM OF ENTRIES: " + rows.length);
+			var chapterPubDates = [];
+
+			for(var row of rows) {
+				chapterPubDates[row.Chapter_num] = row.Pub_date;
+				console.log("PUB DATE: " + row.Pub_date);
+			}
+			
 
 			connection.end();
 		});
