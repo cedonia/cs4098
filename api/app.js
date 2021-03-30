@@ -139,6 +139,44 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 
 let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 	console.log("Update the file!");
+	axios.get(url_rss)
+	.then(response => {
+		const rss_feed = response.data;
+
+		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = " + librilisten_id + " & Pub_date != null;";
+
+		var connection = mysql.createConnection({
+			host     : process.env.host, //localhost
+			database : process.env.database, //librilisten
+			port     : process.env.port, //3306
+			user     : process.env.user, //cedonia
+			password : process.env.password,
+		});
+		connection.connect();
+
+		connection.query(query, function(err, rows, fields) {
+			if (err) throw err;
+
+			console.log("NUM OF ENTRIES: " + rows.length);
+
+			connection.end();
+		});
+
+
+		parser.parseString(rss_feed, function (err, result) {
+			const chapters = result.rss.channel[0].item;
+			chapters.splice(numChaptersToKeep);
+
+			result.rss.channel[0].item[0].pubDate = dateTime;
+
+			var builder = new parser.Builder();
+			var xml = builder.buildObject(result);
+
+			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+				if (err) return console.log(err);
+			});
+		});
+	})
 });
 
 //TOD: SHOULD DELETE THIS METHOD I THINK?
@@ -187,7 +225,7 @@ app.get('/api/update', async (req, res) => {
 	var currentDay = days[d.getUTCDay()];
 	var currentDateTime = calcCurrentTimeString();
 	console.log("CURRENT DAY : " + currentDay);
-	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
+	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 AND " + currentDay.toLowerCase() + " = true";
 
 	var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
