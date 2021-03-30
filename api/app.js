@@ -163,19 +163,19 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 		});
 
 
-		parser.parseString(rss_feed, function (err, result) {
-			const chapters = result.rss.channel[0].item;
-			chapters.splice(numChaptersToKeep);
+		// parser.parseString(rss_feed, function (err, result) {
+		// 	const chapters = result.rss.channel[0].item;
+		// 	chapters.splice(numChaptersToKeep);
 
-			result.rss.channel[0].item[0].pubDate = dateTime;
+		// 	result.rss.channel[0].item[0].pubDate = dateTime;
 
-			var builder = new parser.Builder();
-			var xml = builder.buildObject(result);
+		// 	var builder = new parser.Builder();
+		// 	var xml = builder.buildObject(result);
 
-			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-				if (err) return console.log(err);
-			});
-		});
+		// 	fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+		// 		if (err) return console.log(err);
+		// 	});
+		// });
 	})
 });
 
