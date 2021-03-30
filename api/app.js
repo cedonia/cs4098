@@ -143,6 +143,8 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 	.then(response => {
 		const rss_feed = response.data;
 
+		console.log("PODCAST ID: " + librilisten_id);
+
 		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' & Pub_date != null;";
 
 		var connection = mysql.createConnection({
