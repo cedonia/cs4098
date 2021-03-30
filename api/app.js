@@ -205,18 +205,12 @@ app.get('/api/update', async (req, res) => {
 	var currentDay = days[d.getUTCDay()];
 	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
 
-	var rows = databaseQuery(query);
-
-	try {
+	var rows = databaseQuery(query)
+	.then((rows) => {
 		for(var row of rows) {
 			console.log(row.Librilisten_podcast_id);
 		}
-	}
-
-	catch(err) {
-		console.log("Couldn't iterate through rows");
-	}
-
+	});
 	
 
 
