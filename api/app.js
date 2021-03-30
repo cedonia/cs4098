@@ -189,6 +189,10 @@ let databaseQuery = (async (query) => {
 	connection.query(query, function(err, rows, fields) {
 		if (err) throw err;
 		connection.end();
+		for(var row of rows) {
+			console.log(row.Librilisten_podcast_id);
+		}
+		console.log("DONE PRINTING ROWS IN QUERY METHOD");
 		return rows;
 
 	})
@@ -203,8 +207,14 @@ app.get('/api/update', async (req, res) => {
 
 	var rows = databaseQuery(query);
 
-	for(var row of rows) {
-		console.log(row.Librilisten_podcast_id);
+	try {
+		for(var row of rows) {
+			console.log(row.Librilisten_podcast_id);
+		}
+	}
+
+	catch(err) {
+		console.log("Couldn't iterate through rows");
 	}
 
 	
