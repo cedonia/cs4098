@@ -199,14 +199,16 @@ app.get('/api/update', async (req, res) => {
 	var d = new Date();
 
 	var currentDay = days[d.getUTCDay()];
-
-	console.log("Curreent day: " + currentDay);
-
 	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 & " + currentDay + " = true";
 
 	var rows = databaseQuery(query);
 
-	//todo: calculate current day of the week; for now, assume it's Monday
+	for(var row of rows) {
+		console.log(row.Librilisten_podcast_id);
+	}
+
+	
+
 
 	// var connection = mysql.createConnection({
 	// 		host     : process.env.host, //localhost
