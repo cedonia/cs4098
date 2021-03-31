@@ -129,7 +129,7 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 				if (err) return console.log(err);
 			});
 		});
-	})
+	});
 });
 
 let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {

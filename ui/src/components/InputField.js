@@ -74,7 +74,9 @@ class InputField extends React.Component {
 //https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
   handleSubmit() {
 
-    axios.get(this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun)
+    const uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun;
+
+    axios.get(uri)
     .then(response => {
       console.log(response);
       this.setState({
@@ -83,7 +85,6 @@ class InputField extends React.Component {
         secret_edit_link: response.data.secret_edit_link
       });
     });
-  }
 
   const greenCheckbox = withStyles({
     root: {
