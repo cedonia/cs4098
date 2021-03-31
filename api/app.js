@@ -145,7 +145,7 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 		console.log("PODCAST ID: " + librilisten_id);
 
-		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' & pub_date != null;";
+		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
 		var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
@@ -187,30 +187,30 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 	})
 });
 
-//TOD: SHOULD DELETE THIS METHOD I THINK?
-let genFile = (async (librilisten_id, next_chapter, url_rss) => {
-	axios.get(url_rss).then(response => {
-		const rss_feed = response.data;
+// //TOD: SHOULD DELETE THIS METHOD I THINK?
+// let genFile = (async (librilisten_id, next_chapter, url_rss) => {
+// 	axios.get(url_rss).then(response => {
+// 		const rss_feed = response.data;
 
-		parser.parseString(rss_feed, function (err, result) {
-			const chapters = result.rss.channel[0].item;
-			chapters.splice(next_chapter);
+// 		parser.parseString(rss_feed, function (err, result) {
+// 			const chapters = result.rss.channel[0].item;
+// 			chapters.splice(next_chapter);
 
-			//TODO: Add the pub dates from the old chapters, and the one for this new one.
+// 			//TODO: Add the pub dates from the old chapters, and the one for this new one.
 
-			var builder = new parser.Builder();
-			var xml = builder.buildObject(result);
+// 			var builder = new parser.Builder();
+// 			var xml = builder.buildObject(result);
 
-			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-				if (err) return console.log(err);
-			});
-		});
-				//TODO: defensive programming for file name
-				//TODO: increment the next_chapter value
-				//TODO: simplify the database
-	});
+// 			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+// 				if (err) return console.log(err);
+// 			});
+// 		});
+// 				//TODO: defensive programming for file name
+// 				//TODO: increment the next_chapter value
+// 				//TODO: simplify the database
+// 	});
 
-});
+// });
 
 let calcCurrentTimeString = (() => {
 	let ts = new Date();
