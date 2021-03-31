@@ -53,7 +53,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		//Develop necessary queries
 		const book = 'INSERT INTO librivox_books VALUES (\'' + url_rss + '\', \'' + req.params.title + '\', null);';
 		const podcast = 'INSERT INTO librilisten_podcasts VALUES (\'' + librilisten_id + '\', \'' + url_rss + '\', \'' + secret_edit_code + '\', ' + req.query.mon + ', ' + req.query.tues + ', ' + req.query.wed + ', ' + req.query.thurs + ', ' + req.query.fri + ', ' + req.query.sat + ', ' + req.query.sun + ', false, 0);';
-		var chapters = 'INSERT INTO librilisten_chapters VALUES (\'' + librilisten_id + '\', 0, \'' + currentDateTime + '\')';
+		var chapters = 'INSERT INTO librilisten_chapters VALUES (\'' + librilisten_id + '\', 0, null)';
 
 		//Add additional entries for each chapter
 		for(var i = 1; i < response.data.books[0].num_sections; i++) {
@@ -65,7 +65,6 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		//Make the queries to the database
 		threeDatabaseQueries(book, podcast, chapters)
 		.then((result) => {
-			console.log("MADE IT PAST DATABASE ENTRIES");
 			genUpdatedFile(currentDateTime, url_rss, librilisten_id);
 		});
 
