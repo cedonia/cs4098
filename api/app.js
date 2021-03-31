@@ -247,7 +247,7 @@ app.get('/api/update', async (req, res) => {
 	});
 
 	//Increment skipped ones
-	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND" + currentDay.toLowerCase() + " = true;"
+	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
 
 	connection.query(query, function(err, rows, fields) {
 		if(err) throw err;
