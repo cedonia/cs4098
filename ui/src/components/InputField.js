@@ -87,16 +87,6 @@ class InputField extends React.Component {
       });
     });
 
-  const greenCheckbox = withStyles({
-    root: {
-      color: green[400],
-      '&$checked': {
-        color: green[600],
-      },
-    },
-    checked: {},
-  })((props) => <Checkbox color="default" {...props} />);
-
   render() {
 
     const age = 10;
