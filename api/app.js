@@ -66,7 +66,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		threeDatabaseQueries(book, podcast, chapters)
 		.then((result) => {
 			console.log("MADE IT PAST DATABASE ENTRIES");
-			genInitialFile(currentDateTime, url_rss, librilisten_id);
+			genUpdatedFile(currentDateTime, url_rss, librilisten_id);
 		});
 
 	})
@@ -166,11 +166,9 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 			chapterPubDates[chapterPubDates.length] = dateTime;
 
 			query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + "\' WHERE Librilisten_podcast_id=\'" + librilisten_id + "\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
-			console.log(query);
 
 			connection.query(query, function(err, rows, fields) {
-				// if(err) throw err;
-				if(err) console.log("ERROR");
+				if(err) throw err;
 			});
 
 			parser.parseString(rss_feed, function(err, result) {
