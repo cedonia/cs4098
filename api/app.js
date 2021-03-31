@@ -251,14 +251,11 @@ app.get('/api/update', async (req, res) => {
 
 	connection.query(query, function(err, rows, fields) {
 		if(err) throw err;
-		var newQuery = '';
 		for(var row of rows) {
-			newQuery = newQuery +'UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + "WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';";
+			connection.query('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + "WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", function(err, rows, fields) {
+				if(err) throw err;
+			});
 		}
-
-		connection.query(newQuery, function(err, rows, fields) {
-			if(err) throw err;
-		})
 	});
 
 
