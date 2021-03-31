@@ -29,6 +29,14 @@ class InputField extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
 
+    this.handleMonChange = this.handleMonChange.bind(this);
+    this.handleTuesChange = this.handleTuesChange.bind(this);
+    this.handleWedChange = this.handleWedChange.bind(this);
+    this.handleThursChange = this.handleThursChange.bind(this);
+    this.handleFriChange = this.handleFriChange.bind(this);
+    this.handleSatChange = this.handleSatChange.bind(this);
+    this.handleSunChange = this.handleSunChange.bind(this);
+
     // this.apiLink = 'http://localhost:21257';
     // this.uiLink = 'http://localhost:3000';
     this.apiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
