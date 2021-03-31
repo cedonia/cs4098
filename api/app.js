@@ -165,7 +165,7 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			chapterPubDates[chapterPubDates.length] = dateTime;
 
-			connection.query("UPDATE librilisten_chapters SET Pub_date=" + dateTime + " WHERE Librilisten_podcast_id = " + librilisten_id + " & Chapter_num = " + chapterPubDates.length + ";", function(err, rows, fields) {
+			connection.query("UPDATE librilisten_chapters SET Pub_date=" + dateTime + " WHERE Librilisten_podcast_id = \'" + librilisten_id + "\'' & Chapter_num = " + chapterPubDates.length + ";", function(err, rows, fields) {
 				if(err) throw err;
 			});
 
