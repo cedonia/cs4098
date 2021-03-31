@@ -74,7 +74,10 @@ class InputField extends React.Component {
 //https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
   handleSubmit() {
 
-    const uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun;
+    var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title);
+    uri = uri + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun;
+
+    console.log("URI: " + uri);
 
     axios.get(uri)
     .then(response => {
