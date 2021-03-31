@@ -133,7 +133,6 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 });
 
 let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
-	console.log("Update the file!");
 	axios.get(url_rss)
 	.then(response => {
 		const rss_feed = response.data;
@@ -248,7 +247,6 @@ app.get('/api/update', async (req, res) => {
 		}
 
 		connection.end();
-		return rows;
 
 	});
 
@@ -263,6 +261,8 @@ app.get('/api/update', async (req, res) => {
 			});
 		}
 	});
+
+	res.status(200); //todo is this right? 
 
 });
 
