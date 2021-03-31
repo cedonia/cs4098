@@ -112,31 +112,31 @@ class InputField extends React.Component {
       <p> Select the days you want to receive a new chapter.</p>
       <FormGroup row>
         <FormControlLabel
-          control={<Checkbox checked={state.mon} onChange={handleMonChange} name="Monday" color="primary"/>}
+          control={<Checkbox checked={this.state.mon} onChange={handleMonChange} name="Monday" color="primary"/>}
           label = "Monday"
         />
         <FormControlLabel
-          control={<Checkbox checked={state.tues} onChange={handleTuesChange} name="Tuesday" color="primary" />}
+          control={<Checkbox checked={this.state.tues} onChange={handleTuesChange} name="Tuesday" color="primary" />}
           label = "Tuesday"
         />
         <FormControlLabel
-          control={<Checkbox checked={state.wed} onChange={handleWedChange} name="Wednesday" color="primary" />}
+          control={<Checkbox checked={this.state.wed} onChange={handleWedChange} name="Wednesday" color="primary" />}
           label = "Wednesday"
         />
         <FormControlLabel
-          control={<Checkbox checked={state.thurs} onChange={handleThursChange} name="Thursday" color="primary" />}
+          control={<Checkbox checked={this.state.thurs} onChange={handleThursChange} name="Thursday" color="primary" />}
           label = "Thursday"
         />
         <FormControlLabel
-          control={<Checkbox checked={state.fri} onChange={handleFriChange} name="Friday" color="primary" />}
+          control={<Checkbox checked={this.state.fri} onChange={handleFriChange} name="Friday" color="primary" />}
           label = "Friday"
         />
         <FormControlLabel
-          control={<Checkbox checked={state.sat} onChange={handleSatChange} name="Saturday" color="primary" />}
+          control={<Checkbox checked={this.state.sat} onChange={handleSatChange} name="Saturday" color="primary" />}
           label = "Saturday"
         />
         <FormControlLabel
-          control={<Checkbox checked={state.sun} onChange={handleSunChange} name="Sunday" color="primary" />}
+          control={<Checkbox checked={this.state.sun} onChange={handleSunChange} name="Sunday" color="primary" />}
           label = "Sunday"
         />
       </FormGroup>  
