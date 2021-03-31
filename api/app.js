@@ -57,7 +57,6 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
 		//Add additional entries for each chapter
 		for(var i = 1; i < response.data.books[0].num_sections; i++) {
-			//TODO: CAN ONLY DO 1000 QUERIES IN ONE GO!
 			chapters = chapters + ', (\'' + librilisten_id + '\', ' + i + ', null)';
 		}
 		chapters = chapters + ';';
@@ -71,7 +70,6 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	})
 	.catch((err) => {
 		console.log(err);
-		//TODO: return meaningful error message
 	});
 
 	res.status(200).json({
@@ -257,16 +255,6 @@ app.get('/api/update', async (req, res) => {
 			});
 		}
 	});
-
-
-//TODO: deal with the ones that said to skip; decrement number to skip.
-
-	//todo: Loop through every podcast in the database with more chapters remaining.
-
-	// For each book to update, take the existing file for it and add the next chapter. 
-	//Attach to each chapter the current date as pub date.
-
-	//Update each book to indicate the next chapter, and say whether it's done or not
 
 });
 
