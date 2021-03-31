@@ -90,6 +90,8 @@ class InputField extends React.Component {
         secret_edit_link: response.data.secret_edit_link
       });
     });
+
+    //TODO: don't submit if title undefined, or if no days are selected!
   }
 
   render() {
@@ -119,7 +121,7 @@ class InputField extends React.Component {
       <br/>
       <br/>
       <p> Select the days you want to receive a new chapter.</p>
-      <FormGroup row>
+      <FormGroup row className="Checklist">
         <FormControlLabel
           control={<Checkbox checked={this.state.mon} onChange={this.handleMonChange} name="Monday" color="primary"/>}
           label = "Monday"
