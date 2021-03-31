@@ -172,6 +172,15 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			parser.parseString(rss_feed, function(err, result) {
 				const chapters = result.rss.channel[0].item;
+
+				if(chapters.length == chapterPubDates.length) {
+					//All chapters have now been published!
+					query = "UPDATE librilisten_podcasts SET is_done = true WHERE Librilisten_podcast_id=\'" + librilisten_id + "\';";
+					connection.query(query, function(err, rows, fields) {
+						if(err) throw err;
+					})
+				}
+
 				chapters.splice(chapterPubDates.length);
 
 				for(var i = 0; i < chapterPubDates.length; i++) {
@@ -235,6 +244,21 @@ app.get('/api/update', async (req, res) => {
 		connection.end();
 		return rows;
 
+	});
+
+	//Increment skipped ones
+	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND" + currentDay.toLowerCase() + " = true;"
+
+	connection.query(query, function(err, rows, fields) {
+		if(err) throw err;
+		var newQuery = '';
+		for(var row of rows) {
+			newQuery = newQuery +'UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + "WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';";
+		}
+
+		connection.query(newQuery, function(err, rows, fields) {
+			if(err) throw err;
+		})
 	});
 
 
