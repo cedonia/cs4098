@@ -75,11 +75,12 @@ class InputField extends React.Component {
 
 
 //https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
-  handleSubmit() {
+  handleSubmit(event) {
 
     var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title);
     uri = uri + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' + this.state.sun;
 
+    console.log("URI: " + uri);
     axios.get(uri)
     .then(response => {
       console.log(response);
@@ -153,7 +154,7 @@ class InputField extends React.Component {
       <br/>
       <br/>
 
-      <Button variant="outlined" onClick = {() => this.handleSubmit()} color="primary">
+      <Button variant="outlined" onClick = {() => this.handleSubmit("hello")} color="primary">
         Submit
       </Button>
 
