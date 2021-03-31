@@ -160,6 +160,12 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 				chapterPubDates[row.Chapter_num] = row.Pub_date;
 			}
 
+			var last = chapterPubDates[chapterPubDates.length - 1];
+			const ts = new Date();
+			last = last.split(' ');
+			if(list[0] === ts.getUTCDay()] + ', ' + ts.getUTCDate() && list[1] === ts.getUTCDate()) return;
+
+
 			chapterPubDates[chapterPubDates.length] = dateTime;
 
 			query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + "\' WHERE Librilisten_podcast_id=\'" + librilisten_id + "\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
@@ -219,7 +225,6 @@ app.get('/api/update', async (req, res) => {
 
 	var currentDay = days[d.getUTCDay()];
 	var currentDateTime = calcCurrentTimeString();
-	console.log("CURRENT DAY : " + currentDay);
 	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 AND " + currentDay.toLowerCase() + " = true";
 
 	var connection = mysql.createConnection({
