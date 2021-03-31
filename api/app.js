@@ -123,8 +123,6 @@ let genInitialFile = (async (dateTime, url_rss, librilisten_id) => {
 			const chapters = result.rss.channel[0].item;
 			chapters.splice(1);
 
-			//TODO: Add the pub dates from the old chapters, and the one for this new one.
-
 			result.rss.channel[0].item[0].pubDate = dateTime;
 
 			var builder = new parser.Builder();
@@ -167,6 +165,10 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			chapterPubDates[chapterPubDates.length] = dateTime;
 
+			connection.query("UPDATE librilisten_chapters SET Pub_date=" + dateTime + " WHERE Librilisten_podcast_id = " + librilisten_id + " & Chapter_num = " + chapterPubDates.length + ";", function(err, rows, fields) {
+				if(err) throw err;
+			});
+
 			parser.parseString(rss_feed, function(err, result) {
 				const chapters = result.rss.channel[0].item;
 				chapters.splice(chapterPubDates.length);
@@ -186,48 +188,8 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			connection.end();
 		});
-
-
-		// parser.parseString(rss_feed, function (err, result) {
-		// 	const chapters = result.rss.channel[0].item;
-		// 	chapters.splice(numChaptersToKeep);
-
-		// 	result.rss.channel[0].item[0].pubDate = dateTime;
-
-			// var builder = new parser.Builder();
-			// var xml = builder.buildObject(result);
-
-			// fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-			// 	if (err) return console.log(err);
-			// });
-		// });
 	})
 });
-
-// //TOD: SHOULD DELETE THIS METHOD I THINK?
-// let genFile = (async (librilisten_id, next_chapter, url_rss) => {
-// 	axios.get(url_rss).then(response => {
-// 		const rss_feed = response.data;
-
-// 		parser.parseString(rss_feed, function (err, result) {
-// 			const chapters = result.rss.channel[0].item;
-// 			chapters.splice(next_chapter);
-
-// 			//TODO: Add the pub dates from the old chapters, and the one for this new one.
-
-// 			var builder = new parser.Builder();
-// 			var xml = builder.buildObject(result);
-
-// 			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-// 				if (err) return console.log(err);
-// 			});
-// 		});
-// 				//TODO: defensive programming for file name
-// 				//TODO: increment the next_chapter value
-// 				//TODO: simplify the database
-// 	});
-
-// });
 
 let calcCurrentTimeString = (() => {
 	let ts = new Date();
@@ -273,27 +235,6 @@ app.get('/api/update', async (req, res) => {
 		return rows;
 
 	});
-	
-
-
-	// var connection = mysql.createConnection({
-	// 		host     : process.env.host, //localhost
-	// 		database : process.env.database, //librilisten
-	// 		port     : process.env.port, //3306
-	// 		user     : process.env.user, //cedonia
-	// 		password : process.env.password,
-	// 	});
-	// connection.connect();
-
-	// connection.query("SELECT Librilisten_podcast_id, Librivox_book_id, next_chapter FROM librilisten_podcasts WHERE mon = true AND is_done = FALSE;", function(err, rows, fields) {
-	// 	if(err) throw err;
-	// 	console.log(rows);
-	// 	for(var row of rows) {
-	// 		console.log(row.next_chapter);
-	// 		genFile(row.Librilisten_podcast_id, row.next_chapter, row.Librivox_book_id);
-	// 	}
-	// });
-
 
 
 //TODO: deal with the ones that said to skip; decrement number to skip.
