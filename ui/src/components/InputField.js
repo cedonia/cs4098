@@ -75,7 +75,8 @@ class InputField extends React.Component {
   handleSubmit() {
 
     var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title);
-    uri = uri + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun;
+    uri = uri + '?mon=' + this.state.mon;
+    // + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun;
 
     console.log("URI: " + uri);
 
