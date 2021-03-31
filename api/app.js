@@ -160,12 +160,12 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 				chapterPubDates[row.Chapter_num] = row.Pub_date;
 			}
 
-			//Check that this podcast hasn't already updated today
-			if(chapterPubDates.length > 0) {}
+			//Check that this podcast hasn't alr
+			if(chapterPubDates.length > 0) {
 				var last = chapterPubDates[chapterPubDates.length - 1];
 				const ts = new Date();
 				last = last.split(' ');
-				if(last[0] === ts.getUTCDay()] + ', ' + ts.getUTCDate() && last[1] === ts.getUTCDate()) return;
+				if(last[0] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() && last[1] === ts.getUTCDate()) return;
 			}
 
 
