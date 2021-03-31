@@ -163,8 +163,25 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			for(var row of rows) {
 				chapterPubDates[row.Chapter_num] = row.Pub_date;
-				console.log("PUB DATE: " + row.Pub_date);
 			}
+
+			chapterPubDates[chapterPubDates.length] = dateTime;
+
+			parser.parseString(rss_feed, function(err, result) {
+				const chapters = result.rss.channel[0].item;
+				chapters.splice(chapterPubDates.length);
+
+				for(var i = 0; i < chapterPubDates.length; i++) {
+					result.rss.channel[0].item[i].pubDate = chapterPubDates[i];
+				}
+
+				var builder = new parser.Builder();
+				var xml = builder.buildObject(result);
+
+				fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+					if (err) return console.log(err);
+				});
+			});
 			
 
 			connection.end();
@@ -177,12 +194,12 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 		// 	result.rss.channel[0].item[0].pubDate = dateTime;
 
-		// 	var builder = new parser.Builder();
-		// 	var xml = builder.buildObject(result);
+			// var builder = new parser.Builder();
+			// var xml = builder.buildObject(result);
 
-		// 	fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-		// 		if (err) return console.log(err);
-		// 	});
+			// fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+			// 	if (err) return console.log(err);
+			// });
 		// });
 	})
 });
