@@ -74,18 +74,9 @@ class InputField extends React.Component {
 //https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
   handleSubmit() {
 
-    axios.get(this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun,
-    {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:3000/'
-      }
-    }
-    )
+    axios.get(this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' this.state.sun)
     .then(response => {
       console.log(response);
-      console.log("PWD: " + process.cwd());
-      // axios.get(this.uiLink + '/podcast/' + response.data.url_rss, {method: 'GET'});
       this.setState({
         redirect: true,
         url_rss: response.data.url_rss,
