@@ -143,7 +143,7 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 		console.log("PODCAST ID: " + librilisten_id);
 
-		const query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
+		var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
 		var connection = mysql.createConnection({
 			host     : process.env.host, //localhost
@@ -165,7 +165,10 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 
 			chapterPubDates[chapterPubDates.length] = dateTime;
 
-			connection.query("UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + "\'' WHERE Librilisten_podcast_id = \'" + librilisten_id + "\'' AND Chapter_num = " + chapterPubDates.length - 1 + ";", function(err, rows, fields) {
+			query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + "\'' WHERE Librilisten_podcast_id=\'" + librilisten_id + "\'' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
+			console.log(query);
+
+			connection.query(query, function(err, rows, fields) {
 				if(err) throw err;
 			});
 
