@@ -165,8 +165,9 @@ let genUpdatedFile = (async (dateTime, url_rss, librilisten_id) => {
 				var last = chapterPubDates[chapterPubDates.length - 1];
 				const ts = new Date();
 				last = last.split(' ');
-				console.log("LAST 0: " + last[0] + ", WHAT IT IS: " + days[ts.getUTCDay()] + ', ' + ts.getUTCDate());
-				if(last[0] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() && last[1] === ts.getUTCDate()) return;
+				console.log("LAST 0 + LAST 1: " + last[0] + last[1] + ", WHAT IT IS: " + days[ts.getUTCDay()] + ', ' + ts.getUTCDate());
+				console.log("LAST 2: " + last[2] + ", WHAT IT IS: " + ts.getUTCDate());
+				if(last[0] + last[1] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() && last[2] === ts.getUTCDate()) return;
 			}
 
 
