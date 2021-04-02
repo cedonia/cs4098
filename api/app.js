@@ -65,16 +65,15 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		threeDatabaseQueries(book, podcast, chapters)
 		.then((result) => {
 			genUpdatedFile(currentDateTime, url_rss, librilisten_id);
+			res.status(200).json({
+				secret_edit_link: secret_edit_code,
+				url_rss: librilisten_id
+			});
 		});
 
 	})
 	.catch((err) => {
 		console.log(err);
-	});
-
-	res.status(200).json({
-		secret_edit_link: secret_edit_code,
-		url_rss: librilisten_id
 	});
 
 });
