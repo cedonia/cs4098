@@ -1,8 +1,7 @@
 import React from 'react';
-import {TextField, Button, Select, MenuItem} from '@material-ui/core';
+import {TextField, Button} from '@material-ui/core';
 import axios from 'axios';
 import Confirmation from './Confirmation.js';
-import { withStyles } from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -95,8 +94,6 @@ class InputField extends React.Component {
   }
 
   render() {
-
-    const age = 10;
 
     if(this.state.redirect) {
       return(<Confirmation params={{url_rss: encodeURIComponent(this.uiLink + '/podcasts/' + this.state.url_rss + '.rss'), secret_edit_link: encodeURIComponent(this.uiLink + '/edit/' + this.state.secret_edit_link)}} />)
