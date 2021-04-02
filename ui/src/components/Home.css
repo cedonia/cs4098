@@ -7,9 +7,8 @@
 }
 
 .Checklist {
-  background-color: blue;
-  width:45%;
-  margin-left: 30%;
+  display: flex;
+  justify-content: center;
 }
 
 
