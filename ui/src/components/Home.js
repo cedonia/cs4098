@@ -110,10 +110,10 @@ class Home extends React.Component {
     return (
 
       <div className="App">
-        <header className="logo">
-          <h1>Librilisten</h1>
-          <h2>Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.</h2>
-        </header>
+        <div className="logo">
+          <div className="top-logo"><h1>Librilisten</h1></div>
+          <div className="bottom-logo"><h2>Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.</h2></div>
+        </div>
 
         <p className="regular-text">
           <br/>

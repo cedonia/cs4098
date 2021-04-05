@@ -21,6 +21,16 @@ code {
   background-color: green;
 }
 
+.top-logo {
+	height: 50%;
+	background-color: pink;
+}
+
+.bottom-logo {
+	height: 50%;
+	background-color: orange;
+}
+
 h1 {
 	color: #000080; 
 	font-family: "Great Vibes", cursive; 
