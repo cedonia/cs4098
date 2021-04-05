@@ -9,16 +9,7 @@ import Confirmation from './Confirmation';
 class App extends React.Component {
 
   render() {
-    return (      
-       <BrowserRouter>
-          <Switch>
-            <Route path="/" exact component={Home}/>
-            <Route path="/about" exact component={About}/>
-            <Route path="/confirmation" exact component={Confirmation}/>
-            <Route component={Error}/>
-          </Switch>
-      </BrowserRouter>
-    );
+    return (<InputField initialText="Librivox Title" />);
   }
 }
  
