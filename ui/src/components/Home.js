@@ -12,7 +12,6 @@ class Home extends React.Component {
     super(props);
 
     this.state = {
-      value: this.props.initialText,
       redirect: false,
       podcastId: '',
       mon: false,
@@ -108,8 +107,6 @@ class Home extends React.Component {
       );
     }
 
-    //todo verify it's a valid link
-
     return (
 
       <div className="App">
@@ -118,53 +115,57 @@ class Home extends React.Component {
         </header>
 
         <p className="regular-text">
-          Welcome to LibriListen! Navigate to https://librivox.org/search/ and pick out a book. Enter it below to generate a scheduled podcast feed.
+          Welcome to LibriListen! Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.
+          1. Go to <a href="https://librivox.org/search/" target="_blank">Librivox</a> and choose a book.
+          2. Paste its title into the form below.
+          3. Choose which days you want a new chapter to be published and click "submit" to get the link to your new podcast
         </p>
+
       <div>
-      <TextField id="standard-basic" onChange={this.handleTitleChange} label="Librivox Title" required = {true}/>
-      <br/>
-      <br/>
-      <p> Select the days you want to receive a new chapter.</p>
-      <FormGroup row className="Checklist">
-        <FormControlLabel
-          control={<Checkbox checked={this.state.mon} onChange={this.handleMonChange} name="Monday" color="primary"/>}
-          label = "Monday"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={this.state.tues} onChange={this.handleTuesChange} name="Tuesday" color="primary" />}
-          label = "Tuesday"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={this.state.wed} onChange={this.handleWedChange} name="Wednesday" color="primary" />}
-          label = "Wednesday"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={this.state.thurs} onChange={this.handleThursChange} name="Thursday" color="primary" />}
-          label = "Thursday"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={this.state.fri} onChange={this.handleFriChange} name="Friday" color="primary" />}
-          label = "Friday"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={this.state.sat} onChange={this.handleSatChange} name="Saturday" color="primary" />}
-          label = "Saturday"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={this.state.sun} onChange={this.handleSunChange} name="Sunday" color="primary" />}
-          label = "Sunday"
-        />
-      </FormGroup>  
+        <TextField id="standard-basic" onChange={this.handleTitleChange} label="Librivox Title" required = {true}/>
+        <br/>
+        <br/>
+        <p> Which days do you want to receive a new chapter? </p>
+        <FormGroup row className="Checklist">
+          <FormControlLabel
+            control={<Checkbox checked={this.state.mon} onChange={this.handleMonChange} name="Monday" color="primary"/>}
+            label = "Monday"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.tues} onChange={this.handleTuesChange} name="Tuesday" color="primary" />}
+            label = "Tuesday"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.wed} onChange={this.handleWedChange} name="Wednesday" color="primary" />}
+            label = "Wednesday"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.thurs} onChange={this.handleThursChange} name="Thursday" color="primary" />}
+            label = "Thursday"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.fri} onChange={this.handleFriChange} name="Friday" color="primary" />}
+            label = "Friday"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.sat} onChange={this.handleSatChange} name="Saturday" color="primary" />}
+            label = "Saturday"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={this.state.sun} onChange={this.handleSunChange} name="Sunday" color="primary" />}
+            label = "Sunday"
+          />
+        </FormGroup>  
 
-      <br/>
-      <br/>
-      <br/>
+        <br/>
+        <br/>
+        <br/>
 
-      <Button variant="outlined" onClick = {() => this.handleSubmit("hello")} color="primary">
-        Submit
-      </Button>
+        <Button variant="outlined" onClick = {this.handleSubmit} color="primary">
+          Submit
+        </Button>
 
-      </div>
+        </div>
       </div>
     );
   }

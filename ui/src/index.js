@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Home initialText="Librivox Text" />
+    <Home />
   </React.StrictMode>,
   document.getElementById('root')
 );
