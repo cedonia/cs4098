@@ -129,10 +129,6 @@ class Home extends React.Component {
       <div>
         <TextField id="standard-basic" onChange={this.handleTitleChange} label="Librivox Title" required = {true}/>
         <br/>
-        <br/>
-        <br/>
-        <br/>
-        <p> Which days do you want to receive a new chapter? </p>
         <FormGroup row className="Checklist">
           <FormControlLabel
             control={<Checkbox checked={this.state.mon} onChange={this.handleMonChange} name="Monday" color="primary"/>}
