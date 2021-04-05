@@ -1,11 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
- 
-import Home from './Home';
-import About from './About';
-import Error from './Error';
-import Confirmation from './Confirmation';
- 
+  
 class App extends React.Component {
 
   render() {
