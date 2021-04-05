@@ -18,16 +18,13 @@ code {
   text-align: center;
 }
 
-.logo {
-}
-
-h1 {
+.logo-top{
 	color: #000080; 
 	font-family: "Great Vibes", cursive; 
 	font-size: 3.5em;
 }
 
-h2 {
+.logo-bottom {
 	font-style: italic; 
 	color: #B6B6B6; 
 	font-size: 1em;
