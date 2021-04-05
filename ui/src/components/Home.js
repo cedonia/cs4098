@@ -111,8 +111,8 @@ class Home extends React.Component {
 
       <div className="App">
         <div className="logo">
-          <div className="top-logo"><h1>Librilisten</h1></div>
-          <div className="bottom-logo"><h2>Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.</h2></div>
+          <h1>Librilisten</h1>
+          <h2>Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.</h2>
         </div>
 
         <p className="regular-text">

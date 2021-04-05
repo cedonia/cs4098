@@ -22,31 +22,21 @@ code {
   height: 150px;
 }
 
-.top-logo {
-	height: 80%;
-}
-
-.bottom-logo {
-	height: 30%;
-}
-
 h1 {
 	color: #000080; 
 	font-family: "Great Vibes", cursive; 
-	background-color: purple;
 	width: 100%;
-	height: 100%;
-	font-size: 3em;
+	height: 80%;
+	font-size: 3.5em;
 }
 
 h2 {
 	font-style: italic; 
 	color: #B6B6B6; 
 	width: 100%;
-	height: 100%;
+	height: 20%;
 	font-size: 100%;
-	font-size: 1.5em;
-	background-color: brown; 
+	font-size: 1em;
 }
 
 .Checklist {
