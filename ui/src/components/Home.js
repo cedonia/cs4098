@@ -120,7 +120,7 @@ class Home extends React.Component {
           <br/>
           1. Go to <a href="https://librivox.org/search/" target="_blank">Librivox</a> and choose a book.
           <br/>
-          2. Paste its title into the form below.
+          2. Paste its title (without the author!) into the form below.
           <br/>
           3. Choose which days you want a new chapter to be published
           <br/>

@@ -18,6 +18,16 @@ code {
 
 .logo {
   margin-bottom: 8%;
+  margin-top:10%;
+}
+
+h1 {
+	color: #d54d7b; 
+	font-family: "Great Vibes", cursive; 
+	font-size: 165px; 
+	line-height: 160px; 
+	font-weight: normal; 
+	text-shadow: 0 1px 1px #fff;
 }
 
 .Checklist {
