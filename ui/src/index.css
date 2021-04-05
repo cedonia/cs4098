@@ -23,15 +23,15 @@ code {
 h1 {
 	color: #1E90FF; 
 	font-family: "Great Vibes", cursive; 
-	font-size: 20%; 
-	line-height: 20%; 
+	font-size: 100%; 
+	line-height: 100%; 
 	font-weight: normal; 
 }
 
 h2 {
 	font-style: italic; 
 	color: #B6B6B6; 
-	font-size: 5%; 
+	font-size: 50%; 
 }
 
 .Checklist {
