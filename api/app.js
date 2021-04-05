@@ -74,6 +74,11 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	})
 	.catch((err) => {
 		console.log(err);
+		//DELETE THIS!!!!
+		res.status(200).json({
+			secret_edit_link: "sss",
+			url_rss: "sss"
+		});
 	});
 
 });

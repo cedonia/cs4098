@@ -1,0 +1,8 @@
+1. Home page: User inputs the book they want
+	Visits 2, 3
+
+2. Confirmation page: confirms the podcast has been generated/edited
+	Visits 1, 3
+
+3. Edit page: User edits an existing podcast
+	Visits 1
