@@ -116,13 +116,16 @@ class Home extends React.Component {
 
         <p className="regular-text">
           Welcome to LibriListen! Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.
+          <br/>
           1. Go to <a href="https://librivox.org/search/" target="_blank">Librivox</a> and choose a book.
+          <br/>
           2. Paste its title into the form below.
+          <br/>
           3. Choose which days you want a new chapter to be published and click "submit" to get the link to your new podcast
         </p>
-
       <div>
         <TextField id="standard-basic" onChange={this.handleTitleChange} label="Librivox Title" required = {true}/>
+        <br/>
         <br/>
         <br/>
         <p> Which days do you want to receive a new chapter? </p>
