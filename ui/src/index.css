@@ -28,7 +28,6 @@ code {
 
 .bottom-logo {
 	height: 30%;
-	background-color: orange;
 }
 
 h1 {
@@ -36,7 +35,6 @@ h1 {
 	font-family: "Great Vibes", cursive; 
 	background-color: purple;
 	font-size: 100%;
-	line-height: 100%;
 	width: 100%;
 	height: 100%;
 }
