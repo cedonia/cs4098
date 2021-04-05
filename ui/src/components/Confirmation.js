@@ -50,7 +50,6 @@ class Confirmation extends React.Component {
 
 		        </p>
 
-		        <br/>
 		        <p>
 		        	Podcast link (share with anyone who will be reading along with you!):
 		        	<br/>
@@ -64,6 +63,8 @@ class Confirmation extends React.Component {
 		        	<a target="_blank" href={secretLink}>{secretLink}</a>
 
 		        </p>
+
+		        <br/>
 
 		        <Button variant="outlined" onClick = {() => this.setState({redirect: true})} color="primary">
 		        	Restart
