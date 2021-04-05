@@ -162,4 +162,4 @@ class Home extends React.Component {
     );
   }
 }
-export default InputField
+export default Home
