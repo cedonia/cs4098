@@ -101,10 +101,10 @@ class Home extends React.Component {
 
     if(this.state.redirect) {
       return(
-        <Confirmation params={
+        <Confirmation params={{
           url_rss: encodeURIComponent(this.uiLink + '/podcasts/' + this.state.url_rss + '.rss'), 
           secret_edit_link: encodeURIComponent(this.uiLink + '/edit/' + this.state.secret_edit_link)
-        }/>
+        }}/>
       );
     }
 
