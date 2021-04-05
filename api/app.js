@@ -27,6 +27,10 @@ app.get('/api', async(req, res) => {
 	res.status(200).send("Welcome to the base page of the Librilisten API.");
 });
 
+app.get('/api/David/:name', async (req, res) => {
+	res.status(200).send("David says hello, " + req.params.name);
+});
+
 //TODO: THIS MAYBE SHOULDN'T BE A GET COMMAND
 //Sample: https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
 app.get('/api/GenPodcast/title/:title', async (req, res) => {
