@@ -22,10 +22,7 @@ class Confirmation extends React.Component {
 				secret_edit_link: this.props.params.secret_edit_link,
 				redirect: false
 			};
-		}
-
-		this.handleSubmit = this.handleSubmit.bind(this);
-		
+		}		
 
 	}
 
