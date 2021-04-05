@@ -10,7 +10,7 @@ class Home extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(this.props);
+
     this.state = {
       value: this.props.initialText,
       redirect: false,
@@ -36,8 +36,6 @@ class Home extends React.Component {
     this.handleSatChange = this.handleSatChange.bind(this);
     this.handleSunChange = this.handleSunChange.bind(this);
 
-    // this.apiLink = 'http://localhost:21257';
-    // this.uiLink = 'http://localhost:3000';
     this.apiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
     this.uiLink = "https://cmp24.host.cs.st-andrews.ac.uk";
   }
@@ -73,32 +71,41 @@ class Home extends React.Component {
   }
 
 
-//https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
+  /**
+  When the submit button is clicked, query the API with the user's inputs. 
+  Then store the returned values to be sent to the Confirmation page.
+  **/
   handleSubmit(event) {
 
-    var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title);
-    uri = uri + '?mon=' + this.state.mon + '&tues=' + this.state.tues + '&wed=' + this.state.wed + '&thurs=' + this.state.thurs + '&fri=' + this.state.fri + '&sat=' + this.state.sat + '&sun=' + this.state.sun;
-
-    console.log("URI: " + uri);
+    //Example URI: https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
+    var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + 
+      '?mon=' + this.state.mon + 
+      '&tues=' + this.state.tues + 
+      '&wed=' + this.state.wed + 
+      '&thurs=' + this.state.thurs + 
+      '&fri=' + this.state.fri + 
+      '&sat=' + this.state.sat + 
+      '&sun=' + this.state.sun;
+    
     axios.get(uri)
     .then(response => {
-      console.log(response);
       this.setState({
         redirect: true,
         url_rss: response.data.url_rss,
         secret_edit_link: response.data.secret_edit_link
       });
     });
-
-    //TODO: don't submit if title undefined, or if no days are selected!
   }
 
   render() {
 
     if(this.state.redirect) {
-      return(<Confirmation params={{url_rss: encodeURIComponent(this.uiLink + '/podcasts/' + this.state.url_rss + '.rss'), secret_edit_link: encodeURIComponent(this.uiLink + '/edit/' + this.state.secret_edit_link)}} />)
-      // window.location= this.uiLink + "?page=confirmation&url_rss=" + encodeURIComponent(this.state.url_rss) + "&secret_edit_link=" + encodeURIComponent(this.state.secret_edit_link);
-      //todo fix
+      return(
+        <Confirmation params={
+          url_rss: encodeURIComponent(this.uiLink + '/podcasts/' + this.state.url_rss + '.rss'), 
+          secret_edit_link: encodeURIComponent(this.uiLink + '/edit/' + this.state.secret_edit_link)
+        }/>
+      );
     }
 
     //todo verify it's a valid link
