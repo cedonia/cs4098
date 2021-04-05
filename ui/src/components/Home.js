@@ -6,7 +6,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-class InputField extends React.Component {
+class Home extends React.Component {
 
   constructor(props) {
     super(props);

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from '@material-ui/core';
-import InputField from './InputField.js';
+import Home from './Home.js';
  
 class Confirmation extends React.Component {
 
@@ -36,7 +36,7 @@ this.state = {url_rss: decodeURIComponent(params.url_rss), secret_edit_link: dec
     render() {
 
     	if(this.state.redirect) {
-    		return(<InputField initialText="Libriox Title" /> );
+    		return(<Home initialText="Libriox Title" /> );
     	}
 
     	const podcastLink = decodeURIComponent(this.state.url_rss);

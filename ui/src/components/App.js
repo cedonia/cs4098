@@ -1,11 +1,11 @@
 import React from 'react';
-import InputField from './InputField';
+import Home from './Home';
 import './App.css';
   
 class App extends React.Component {
 
   render() {
-    return (<InputField initialText="Librivox Title" />);
+    return (<Home initialText="Librivox Title" />);
   }
 }
  

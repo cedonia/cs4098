@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Home from './components/Home';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <InputField initialText="Librivox Title" />
+    <Home initialText="Librivox Title" />
   </React.StrictMode>,
   document.getElementById('root')
 );
