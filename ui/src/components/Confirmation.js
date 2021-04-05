@@ -42,12 +42,17 @@ class Confirmation extends React.Component {
 		          <div className="logo-bottom">Turn your next read into a customized podcast, with new chapters only when <i>you</i> want them.</div>
 		        </div>
 
+		        <br/>
 		     	<p>
-		        	You have successfully generated a podcast feed.
+		        	You have successfully generated a podcast feed! 
+		        	<br/>
+		        	Click <a href="https://cmp24.st-andrews.ac.uk/podcast-instructions.txt" target="_blank">here</a> for instructions to subscribe on the podcast app of your choice.
+
 		        </p>
 
+		        <br/>
 		        <p>
-		        	Podcast link (share with your book group!):
+		        	Podcast link (share with anyone who will be reading along with you!):
 		        	<br/>
 		        	<a target="_blank" href={podcastLink}>{podcastLink}</a>
 
