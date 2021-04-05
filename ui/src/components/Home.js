@@ -131,7 +131,7 @@ class Home extends React.Component {
         <br/>
         <br/>
         <br/>
-        <p> Which days do you want to receive a new chapter? </p>
+        <div> Which days do you want to receive a new chapter? </div>
         <FormGroup row className="Checklist">
           <FormControlLabel
             control={<Checkbox checked={this.state.mon} onChange={this.handleMonChange} name="Monday" color="primary"/>}
