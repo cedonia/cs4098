@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Bowlby+One+SC');
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -18,7 +20,6 @@ code {
 
 .logo {
   height: 150px;
-  background-color: green;
 }
 
 .top-logo {
@@ -34,8 +35,9 @@ code {
 h1 {
 	color: #000080; 
 	font-family: "Great Vibes", cursive; 
-	font-size: 90%; 
 	background-color: purple;
+	width: 320px;
+	height: 320px;
 }
 
 h2 {
