@@ -1,5 +1,6 @@
 import React from 'react';
 import InputField from './InputField';
+import './App.css';
   
 class App extends React.Component {
 
@@ -9,15 +10,3 @@ class App extends React.Component {
 }
  
 export default App;
-
-/****
-<BrowserRouter>
-          <Switch>
-            <Route path="/" exact component={Home}/>
-            <Route path="/about" exact component={About}/>
-            <Route path="/confirmation" exact component={Confirmation}/>
-            <Redirect from="/build/index.html" to="/"/>
-            <Route component={Error}/>
-          </Switch>
-      </BrowserRouter>
-      ***/
