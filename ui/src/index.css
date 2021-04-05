@@ -23,12 +23,11 @@ code {
 }
 
 .top-logo {
-	height: 50%;
-	background-color: pink;
+	height: 80%;
 }
 
 .bottom-logo {
-	height: 50%;
+	height: 30%;
 	background-color: orange;
 }
 
@@ -36,6 +35,8 @@ h1 {
 	color: #000080; 
 	font-family: "Great Vibes", cursive; 
 	background-color: purple;
+	font-size: 100%;
+	line-height: 100%;
 	width: 100%;
 	height: 100%;
 }
@@ -43,7 +44,8 @@ h1 {
 h2 {
 	font-style: italic; 
 	color: #B6B6B6; 
-	font-size: 10%;
+	width: 100%;
+	height: 100%;
 	background-color: brown; 
 }
 
