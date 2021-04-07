@@ -68,8 +68,6 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 //Do the actual generation of the file
 const doTheFileGeneration = (async (url_rss, librilisten_id, chapterPubDates) => {
 
-	console.log("DO THE FILE GENERATION");
-
 	//Retrieve the original Librivox rss file
 	axios.get(url_rss)
 	.then(response => {

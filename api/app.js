@@ -10,6 +10,7 @@ let parser = require('xml2js');
 const { uuid } = require('uuidv4');
 const rss = require('rss');
 const FileGenerator = require('./FileGenerator');
+const database = require('./database.js');
 
 const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -42,54 +43,8 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		formattedTitle = formattedTitle.slice(6);
 	}	
 
-	//Retrieve the rss url from Librivox and make the podcast database entry
-	axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}')
-	.then(response => {
-
-		const url_rss = response.data.books[0].url_rss;
-
-		//Develop necessary queries
-		const bookQuery = 'INSERT INTO librivox_books VALUES (\'' + 
-			url_rss + '\', \'' + 
-			req.params.title + 
-			'\', null);';
-
-		const podcastQuery = 'INSERT INTO librilisten_podcasts VALUES (\'' + 
-			librilisten_id + '\', \'' + 
-			url_rss + '\', \'' + 
-			secret_edit_code + '\', ' + 
-			req.query.mon + ', ' + 
-			req.query.tues + ', ' + 
-			req.query.wed + ', ' + 
-			req.query.thurs + ', ' + 
-			req.query.fri + ', ' + 
-			req.query.sat + ', ' + 
-			req.query.sun + 
-			', false, 0);';
-
-		var chaptersQuery = 'INSERT INTO librilisten_chapters VALUES (\'' + 
-			librilisten_id + 
-			'\', 0, null)';
-
-		//Add additional entries for each chapter
-		for(var i = 1; i < response.data.books[0].num_sections; i++) {
-			chaptersQuery = chaptersQuery + ', (\'' + librilisten_id + '\', ' + i + ', null)';
-		}
-		chaptersQuery = chaptersQuery + ';';
-
-		//Make the queries to the database
-		threeDatabaseQueries(bookQuery, podcastQuery, chaptersQuery)
-		.then((result) => {
-
-			FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id);
-
-			res.status(200).json({
-				secret_edit_link: secret_edit_code,
-				url_rss: librilisten_id
-			});
-		});
-
-	})
+	//Retrieve the rss url from Librivox
+	const queryRes = await axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}')
 	.catch((err) => {
 		console.log(err);
 		res.status(200).json({
@@ -98,6 +53,47 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		});
 	});
 
+	const url_rss = queryRes.data.books[0].url_rss;
+
+	//Develop necessary queries
+	const bookQuery = 'INSERT INTO librivox_books VALUES (\'' + 
+		url_rss + '\', \'' + 
+		req.params.title + 
+		'\', null);';
+
+	const podcastQuery = 'INSERT INTO librilisten_podcasts VALUES (\'' + 
+		librilisten_id + '\', \'' + 
+		url_rss + '\', \'' + 
+		secret_edit_code + '\', ' + 
+		req.query.mon + ', ' + 
+		req.query.tues + ', ' + 
+		req.query.wed + ', ' + 
+		req.query.thurs + ', ' + 
+		req.query.fri + ', ' + 
+		req.query.sat + ', ' + 
+		req.query.sun + 
+		', false, 0);';
+
+	var chaptersQuery = 'INSERT INTO librilisten_chapters VALUES (\'' + 
+		librilisten_id + 
+		'\', 0, null)';
+
+	//Add additional entries for each chapter
+	for(var i = 1; i < response.data.books[0].num_sections; i++) {
+		chaptersQuery = chaptersQuery + ', (\'' + librilisten_id + '\', ' + i + ', null)';
+	}
+	chaptersQuery = chaptersQuery + ';';
+
+	await database.executeQuery(bookQuery).catch((err) => {console.log("This book is already in the database.")});
+	await database.executeQuery(podcastQuery);
+	await database.executeQuery(chaptersQuery);
+
+	await FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id);
+
+	res.status(200).json({
+		secret_edit_link: secret_edit_code,
+		url_rss: librilisten_id
+	});
 });
 
 app.get('/api/update', async (req, res) => {
@@ -142,33 +138,6 @@ app.get('/api/update', async (req, res) => {
 	});
 
 	res.status(200); //todo is this right? 
-
-});
-
-//TODO : RENAME THIS IS ONLY FOR THE INITIAL SETUP
-let threeDatabaseQueries = (async (librivox_books_query, librilisten_podcasts_query, librilisten_chapters_query) => {
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-		});
-	connection.connect();
-
-
-	connection.query(librivox_books_query, function(err, rows, fields) {
-		if (err) console.log("This book is already in the database.");
-
-		connection.query(librilisten_podcasts_query, function(err, rows, fields) {
-			if(err) throw err;
-
-			connection.query(librilisten_chapters_query, function(err, rows, fields) {
-				if(err) throw err;
-				connection.end();
-			})
-		});
-	})
 
 });
 

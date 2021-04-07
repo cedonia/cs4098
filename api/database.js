@@ -20,3 +20,11 @@ module.exports.executeQuery = async function(query, connection) {
 		if(err) throw err;
 	});
 }
+
+module.exports.executeQuery = async function(query) {
+	connection = module.exports.makeConnection();
+	connection.query(query, function(err, rows, fields) {
+		if(err) throw err;
+	});
+	connection.end();
+}
