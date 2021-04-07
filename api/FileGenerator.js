@@ -19,7 +19,7 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 
 	//Calculate an array of the published chapters (including the one published today)
 	retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime)
-	.then((chapterPubDates) => {
+	.then(response => {
 
 		console.log("PUB DATES IN FIRST METHOD: " + chapterPubDates);
 
@@ -37,7 +37,7 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
 			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
-	connection.query(query, async function(err, rows, fields) {
+	const res = await connection.query(query, async function(err, rows, fields) {
 		if(err) throw err;
 
 		const chapterPubDates = [];
@@ -46,28 +46,29 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 			chapterPubDates[row.Chapter_num] = row.Pub_date;
 		}
 
-		//Check that this podcast hasn't already been updated today
-		if(chapterPubDates.length > 0) {
-			var last = chapterPubDates[chapterPubDates.length - 1];
-			const ts = new Date();
-			last = last.split(' ');
+		// //Check that this podcast hasn't already been updated today
+		// if(chapterPubDates.length > 0) {
+		// 	var last = chapterPubDates[chapterPubDates.length - 1];
+		// 	const ts = new Date();
+		// 	last = last.split(' ');
 
-			if(last[0] + " " + last[1] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() 
-				&& last[2] === months[ts.getUTCMonth()]) return null; //Return null to indicate that the file isn't in need up regeneration
-		}
+		// 	if(last[0] + " " + last[1] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() 
+		// 		&& last[2] === months[ts.getUTCMonth()]) return null; //Return null to indicate that the file isn't in need up regeneration
+		// }
 
-		chapterPubDates[chapterPubDates.length] = dateTime; //Add today's chapter 
+		// chapterPubDates[chapterPubDates.length] = dateTime; //Add today's chapter 
 
-		//Update chapters database
-		query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + 
-			"\' WHERE Librilisten_podcast_id=\'" + librilisten_id + 
-			"\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
-		database.executeQuery(query, connection);
+		// //Update chapters database
+		// query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + 
+		// 	"\' WHERE Librilisten_podcast_id=\'" + librilisten_id + 
+		// 	"\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
+		// database.executeQuery(query, connection);
 
 		console.log("PUB DATES: " + chapterPubDates);
 
 		return chapterPubDates;
 	});
+	console.log("RES: " + res);
 });
 
 //Do the actual generation of the file
