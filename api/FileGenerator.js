@@ -19,7 +19,7 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 
 	//Calculate an array of the published chapters (including the one published today)
 	retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime)
-	.then(chapterPubDates => {
+	.then((chapterPubDates) => {
 
 		console.log("PUB DATES IN FIRST METHOD: " + chapterPubDates);
 
