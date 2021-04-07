@@ -79,7 +79,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		'\', 0, null)';
 
 	//Add additional entries for each chapter
-	for(var i = 1; i < response.data.books[0].num_sections; i++) {
+	for(var i = 1; i < queryRes.data.books[0].num_sections; i++) {
 		chaptersQuery = chaptersQuery + ', (\'' + librilisten_id + '\', ' + i + ', null)';
 	}
 	chaptersQuery = chaptersQuery + ';';
