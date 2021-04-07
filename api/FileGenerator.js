@@ -1,3 +1,8 @@
+const axios = require('axios');
+const mysql = require('mysql');
+let parser = require('xml2js');
+
+
 	/***
 
 Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
