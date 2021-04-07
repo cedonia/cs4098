@@ -28,9 +28,11 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 	database.executeQuery(query, connection);
 
 	//Generate the actual file
-	doTheFileGeneration(url_rss, librilisten_id, chapterPubDates);
+	doTheFileGeneration(url_rss, librilisten_id, chapterPubDates)
+	.then(response => {
+		connection.end();
+	});
 
-	connection.end();
 };
 
 //Calculate all the published chapters so far
@@ -63,7 +65,7 @@ const retrievePublishedChapters = (async (connection) => {
 });
 
 //Do the actual generation of the file
-const doTheFileGeneration = ((url_rss, librilisten_id, chapterPubDates) => {
+const doTheFileGeneration = (async (url_rss, librilisten_id, chapterPubDates) => {
 	//Retrieve the original Librivox rss file
 	axios.get(url_rss)
 	.then(response => {
