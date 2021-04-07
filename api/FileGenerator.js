@@ -18,11 +18,15 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 	connection.connect();
 
 	//Calculate an array of the published chapters (including the one published today)
-	const chapterPubDates = await retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime);
-	if(chapterPubDates == null) return; //Return if it doesn't need to update the file
+	retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime)
+	.then(chapterPubDates => {
+		
+		//Return if it doesn't need to update the file
+		if(chapterPubDates == null) return;
 
-	//Generate the actual file
-	doTheFileGeneration(url_rss, librilisten_id, chapterPubDates);
+		//Generate the actual file
+		doTheFileGeneration(url_rss, librilisten_id, chapterPubDates);
+	});
 
 };
 
@@ -30,8 +34,6 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, dateTime) => {
 	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
 			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
-
-	console.log("DOING CHAPTERS");
 
 	connection.query(query, function(err, rows, fields) {
 		if(err) throw err;
@@ -59,8 +61,6 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 			"\' WHERE Librilisten_podcast_id=\'" + librilisten_id + 
 			"\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
 		database.executeQuery(query, connection);
-
-		console.log("CHAPTER PUB DATES: " + chapterPubDates);
 
 		return chapterPubDates;
 	});
