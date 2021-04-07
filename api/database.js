@@ -7,10 +7,10 @@ and generate the initial file with just one chapter.
 **/
 module.exports.makeConnection = async function () {
 	return mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
+			host     : process.env.host,
+			database : process.env.database,
+			port     : process.env.port,
+			user     : process.env.user,
 			password : process.env.password,
 	});
 };
