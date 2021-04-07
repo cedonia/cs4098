@@ -1,6 +1,7 @@
 const axios = require('axios');
 const mysql = require('mysql');
 let parser = require('xml2js');
+const fs = require('fs');
 
 
 	/***
