@@ -65,7 +65,7 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 		database.executeQuery(query, connection);
 
 		console.log("PUB DATES: " + chapterPubDates);
-	}).then(res => {return chapterPubDates});
+	}.then(res => {return chapterPubDates}));
 	
 });
 
