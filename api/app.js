@@ -84,7 +84,13 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	}
 	chaptersQuery = chaptersQuery + ';';
 
-	await database.executeQuery(bookQuery).catch((err) => {console.log("This book is already in the database.")});
+	try {
+		await database.executeQuery(bookQuery);
+	}
+	catch(err) {
+		console.log("This book is already in the database.")
+	}
+	
 	await database.executeQuery(podcastQuery);
 	await database.executeQuery(chaptersQuery);
 
