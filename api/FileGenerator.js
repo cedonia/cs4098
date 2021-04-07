@@ -31,6 +31,8 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
 			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
+	console.log("DOING CHAPTERS");
+
 	connection.query(query, function(err, rows, fields) {
 		if(err) throw err;
 
@@ -57,6 +59,8 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 			"\' WHERE Librilisten_podcast_id=\'" + librilisten_id + 
 			"\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
 		database.executeQuery(query, connection);
+
+		console.log("CHAPTER PUB DATES: " + chapterPubDates);
 
 		return chapterPubDates;
 	});
