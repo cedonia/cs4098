@@ -28,10 +28,7 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 	database.executeQuery(query, connection);
 
 	//Generate the actual file
-	doTheFileGeneration(url_rss, librilisten_id, chapterPubDates)
-	.then(response => {
-		connection.end();
-	});
+	doTheFileGeneration(url_rss, librilisten_id, chapterPubDates);
 
 };
 
@@ -79,8 +76,13 @@ const doTheFileGeneration = (async (url_rss, librilisten_id, chapterPubDates) =>
 			if(chapters.length == chapterPubDates.length) {
 				//All chapters have now been published!
 				query = "UPDATE librilisten_podcasts SET is_done = true WHERE Librilisten_podcast_id=\'" + librilisten_id + "\';";
-				await database.executeQuery(query, connection);
+				database.executeQuery(query, connection)
+				.then(response => {
+					connection.end();
+				});
 			}
+
+			connection.end();
 
 			//Chop the chapters down to just the ones with pub dates
 			chapters.splice(chapterPubDates.length);
