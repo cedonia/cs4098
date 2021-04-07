@@ -18,7 +18,7 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 	connection.connect();
 
 	//Calculate an array of the published chapters (including the one published today)
-	const chapterPubDates = await retrievePublishedChapters(connection);
+	const chapterPubDates = await retrievePublishedChapters(connection, librilisten_id);
 	if(chapterPubDates == null) return; //Return if it doesn't need to update the file
 
 	//Update chapters database
@@ -33,7 +33,7 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 };
 
 //Calculate all the published chapters so far
-const retrievePublishedChapters = (async (connection) => {
+const retrievePublishedChapters = (async (connection, librilisten_id) => {
 	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
 			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
@@ -63,6 +63,7 @@ const retrievePublishedChapters = (async (connection) => {
 
 //Do the actual generation of the file
 const doTheFileGeneration = (async (url_rss, librilisten_id, chapterPubDates) => {
+
 	//Retrieve the original Librivox rss file
 	axios.get(url_rss)
 	.then(response => {
