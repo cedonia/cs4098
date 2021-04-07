@@ -28,3 +28,11 @@ module.exports.executeQuery = async function(query) {
 	});
 	connection.end();
 }
+
+module.exports.executeQueryWithErrorMsg = async function(query, errorMsg) {
+	connection = await module.exports.makeConnection();
+	connection.query(query, function(err, rows, fields) {
+		if(err) console.log(errorMsg);
+	});
+	connection.end();
+}
