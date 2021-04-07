@@ -22,7 +22,7 @@ module.exports.executeQuery = async function(query, connection) {
 }
 
 module.exports.executeQuery = async function(query) {
-	connection = module.exports.makeConnection();
+	connection = await module.exports.makeConnection();
 	connection.query(query, function(err, rows, fields) {
 		if(err) throw err;
 	});
