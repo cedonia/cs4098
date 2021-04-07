@@ -24,10 +24,10 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 		console.log("PUB DATES IN FIRST METHOD: " + response);
 
 		//Return if it doesn't need to update the file
-		if(chapterPubDates == null) return;
+		if(response == null) return;
 
 		//Generate the actual file
-		doTheFileGeneration(url_rss, librilisten_id, chapterPubDates);
+		doTheFileGeneration(url_rss, librilisten_id, response);
 	});
 
 };
@@ -39,7 +39,7 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 
 	var chapterPubDates = [];
 
-	const res = await connection.query(query, async function(err, rows, fields) {
+	connection.query(query, async function(err, rows, fields) {
 		if(err) throw err;
 
 		for(var row of rows) {
@@ -65,8 +65,8 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 		database.executeQuery(query, connection);
 
 		console.log("PUB DATES: " + chapterPubDates);
-	});
-	console.log("PUB DATES BELOW: " + chapterPubDates);
+	}).then(return chapterPubDates);
+	
 });
 
 //Do the actual generation of the file
