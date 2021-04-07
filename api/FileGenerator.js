@@ -39,7 +39,7 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 
 	var chapterPubDates = [];
 
-	connection.query(query, async function(err, rows, fields) {
+	await connection.query(query, async function(err, rows, fields) {
 		if(err) throw err;
 
 		for(var row of rows) {
@@ -65,7 +65,9 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 		database.executeQuery(query, connection);
 
 		console.log("PUB DATES: " + chapterPubDates);
-	}.then(res => {return chapterPubDates}));
+	});
+
+	console.log("PUB DATES BELOW: " + chapterPubDates);
 	
 });
 
