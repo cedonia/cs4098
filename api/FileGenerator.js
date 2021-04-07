@@ -1,86 +1,99 @@
 const axios = require('axios');
 const mysql = require('mysql');
-let parser = require('xml2js');
+const parser = require('xml2js');
 const fs = require('fs');
+const database = require('./database.js');
 
+const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-	/***
-
-Generate the rss file: Take the current date and time and the original rss url and generate the initial file with just one chapter.
-
-	**/
-
+/***
+Generate the rss file: Take the current date and time and the original rss url 
+and generate the initial file with just one chapter.
+**/
 module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_id) {
+
+	//Open a connection to the database
+	var connection = database.makeConnection();
+	connection.connect();
+
+	//Calculate an array of the published chapters (including the one published today)
+	const chapterPubDates = await retrievePublishedChapters(connection);
+	if(chapterPubDates == null) return; //Return if it doesn't need to update the file
+
+	//Update chapters database
+	query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + 
+		"\' WHERE Librilisten_podcast_id=\'" + librilisten_id + 
+		"\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
+	database.executeQuery(query, connection);
+
+	//Generate the actual file
+	doTheFileGeneration(url_rss, librilisten_id, chapterPubDates);
+
+	connection.end();
+};
+
+//Calculate all the published chapters so far
+const retrievePublishedChapters = (async (connection) => {
+	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
+			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
+
+	connection.query(query, function(err, rows, fields) {
+		if(err) throw err;
+
+		const chapterPubDates = [];
+
+		for(var row of rows) {
+			chapterPubDates[row.Chapter_num] = row.Pub_date;
+		}
+
+		//Check that this podcast hasn't already been updated today
+		if(chapterPubDates.length > 0) {
+			var last = chapterPubDates[chapterPubDates.length - 1];
+			const ts = new Date();
+			last = last.split(' ');
+
+			if(last[0] + " " + last[1] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() 
+				&& last[2] === months[ts.getUTCMonth()]) return null; //Return null to indicate that the file isn't in need up regeneration
+		}
+
+		chapterPubDates[chapterPubDates.length] = dateTime; //Add today's chapter 
+		return chapterPubDates;
+	});
+});
+
+//Do the actual generation of the file
+const doTheFileGeneration = ((url_rss, librilisten_id, chapterPubDates) => {
+	//Retrieve the original Librivox rss file
 	axios.get(url_rss)
 	.then(response => {
-		const rss_feed = response.data;
 
-		console.log("PODCAST ID: " + librilisten_id);
+		const rss_feed = response.data; //The librivox rss feed
 
-		var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
+		parser.parseString(rss_feed, function(err, result) {
 
-		var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-		});
-		connection.connect();
+			const chapters = result.rss.channel[0].item;
 
-		connection.query(query, function(err, rows, fields) {
-			if (err) throw err;
-
-			var chapterPubDates = [];
-
-			for(var row of rows) {
-				chapterPubDates[row.Chapter_num] = row.Pub_date;
+			if(chapters.length == chapterPubDates.length) {
+				//All chapters have now been published!
+				query = "UPDATE librilisten_podcasts SET is_done = true WHERE Librilisten_podcast_id=\'" + librilisten_id + "\';";
+				await database.executeQuery(query, connection);
 			}
 
-			//Check that this podcast hasn't already been updated today
-			if(chapterPubDates.length > 0) {
-				var last = chapterPubDates[chapterPubDates.length - 1];
-				const ts = new Date();
-				last = last.split(' ');
-				if(last[0] + " " + last[1] === days[ts.getUTCDay()] + ', ' + ts.getUTCDate() && last[2] === months[ts.getUTCMonth()]) return;
+			//Chop the chapters down to just the ones with pub dates
+			chapters.splice(chapterPubDates.length);
+
+			//Loop through pub dates, giving each published chapter its pub date
+			for(var i = 0; i < chapterPubDates.length; i++) {
+				result.rss.channel[0].item[i].pubDate = chapterPubDates[i];
 			}
 
-
-			chapterPubDates[chapterPubDates.length] = dateTime;
-
-			query = "UPDATE librilisten_chapters SET Pub_date=\'" + dateTime + "\' WHERE Librilisten_podcast_id=\'" + librilisten_id + "\' AND Chapter_num=" + (chapterPubDates.length - 1) + ";";
-
-			connection.query(query, function(err, rows, fields) {
-				if(err) throw err;
+			//Construct the new file
+			var builder = new parser.Builder();
+			var xml = builder.buildObject(result);
+			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+				if (err) return console.log(err);
 			});
-
-			parser.parseString(rss_feed, function(err, result) {
-				const chapters = result.rss.channel[0].item;
-
-				if(chapters.length == chapterPubDates.length) {
-					//All chapters have now been published!
-					query = "UPDATE librilisten_podcasts SET is_done = true WHERE Librilisten_podcast_id=\'" + librilisten_id + "\';";
-					connection.query(query, function(err, rows, fields) {
-						if(err) throw err;
-					})
-				}
-
-				chapters.splice(chapterPubDates.length);
-
-				for(var i = 0; i < chapterPubDates.length; i++) {
-					result.rss.channel[0].item[i].pubDate = chapterPubDates[i];
-				}
-
-				var builder = new parser.Builder();
-				var xml = builder.buildObject(result);
-
-				fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
-					if (err) return console.log(err);
-				});
-			});
-			
-
-			connection.end();
 		});
-	})
-};
+	});
+});
