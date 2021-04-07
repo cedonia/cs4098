@@ -46,7 +46,7 @@ class Confirmation extends React.Component {
 		     	<p>
 		        	You have successfully generated a podcast feed! 
 		        	<br/>
-		        	Click <a href="https://cmp24.st-andrews.ac.uk/podcast-instructions.txt" target="_blank">here</a> for instructions to subscribe on the podcast app of your choice.
+		        	Click <a href="https://cmp24.host.cs.st-andrews.ac.uk/podcast-instructions.txt" target="_blank">here</a> for instructions to subscribe on the podcast app of your choice.
 
 		        </p>
 
