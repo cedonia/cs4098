@@ -37,7 +37,7 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
 			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
-	connection.query(query, function(err, rows, fields) {
+	connection.query(query, async function(err, rows, fields) {
 		if(err) throw err;
 
 		const chapterPubDates = [];
