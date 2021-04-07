@@ -14,7 +14,7 @@ and generate the initial file with just one chapter.
 module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_id) {
 
 	//Open a connection to the database
-	var connection = database.makeConnection();
+	var connection = await database.makeConnection();
 	connection.connect();
 
 	//Calculate an array of the published chapters (including the one published today)
