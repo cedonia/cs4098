@@ -100,42 +100,34 @@ app.get('/api/update', async (req, res) => {
 
 	var d = new Date();
 
-	var currentDay = days[d.getUTCDay()];
+	//Update all podcasts which need to be updated
 	var currentDateTime = calcCurrentTimeString();
 	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 AND " + currentDay.toLowerCase() + " = true";
 
-	var connection = mysql.createConnection({
-			host     : process.env.host, //localhost
-			database : process.env.database, //librilisten
-			port     : process.env.port, //3306
-			user     : process.env.user, //cedonia
-			password : process.env.password,
-		});
+	const connection = database.makeConnection();
 	connection.connect();
 
-
-	connection.query(query, function(err, rows, fields) {
+	await connection.query(query, function(err, rows, fields) {
 		if (err) throw err;
 
 		for(var row of rows) {
 			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id);
 		}
-
-		connection.end();
-
 	});
 
-	//Increment skipped ones
+	//Increment skipped podcasts
+	var currentDay = days[d.getUTCDay()];
 	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
 
-	connection.query(query, function(err, rows, fields) {
+	await connection.query(query, function(err, rows, fields) {
 		if(err) throw err;
 		for(var row of rows) {
-			connection.query('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + "WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", function(err, rows, fields) {
-				if(err) throw err;
-			});
+			database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + 
+				"WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", connection);
 		}
 	});
+
+	connection.end();
 
 	res.status(200); //todo is this right? 
 
