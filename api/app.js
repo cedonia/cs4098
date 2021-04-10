@@ -1,14 +1,9 @@
 const express = require('express');
 const app = express();
-const mysql = require('mysql');
-const fs = require('fs');
 const axios = require('axios');
 const hostname = '127.0.0.1';
 const port = 21257;
-var cors = require('cors');
-let parser = require('xml2js');
 const { uuid } = require('uuidv4');
-const rss = require('rss');
 const FileGenerator = require('./FileGenerator');
 const database = require('./database.js');
 
@@ -84,11 +79,10 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	}
 	chaptersQuery = chaptersQuery + ';';
 
-	await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.");
-	await database.executeQuery(podcastQuery);
-	await database.executeQuery(chaptersQuery);
-
-	await FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id);
+	await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.")
+	.then(database.executeQuery(podcastQuery))
+	.then(database.executeQuery(chaptersQuery))
+	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id));
 
 	res.status(200).json({
 		secret_edit_link: secret_edit_code,

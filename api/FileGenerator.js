@@ -1,5 +1,4 @@
 const axios = require('axios');
-const mysql = require('mysql');
 const parser = require('xml2js');
 const fs = require('fs');
 const database = require('./database.js');
