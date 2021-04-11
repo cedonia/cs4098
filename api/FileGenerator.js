@@ -19,8 +19,9 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 	//Calculate an array of the published chapters (including the one published today)
 	retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime, ignorePubDayDup, function(chapterPubDates) {
 
+		console.log("CHAPTER PUB DATES: " + chapterPubDates);
 		//Return if it doesn't need to update the file
-		if(chapterPubDates == null) return;
+		if(chapterPubDates === null) return;
 
 		//Generate the actual file
 		doTheFileGeneration(url_rss, librilisten_id, chapterPubDates).then(connection.end());
