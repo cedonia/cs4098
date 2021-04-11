@@ -96,6 +96,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 app.get('/api/update', async (req, res) => {
 
 	var d = new Date();
+	var currentDay = days[d.getUTCDay()];
 
 	//Update all podcasts which need to be updated
 	var currentDateTime = calcCurrentTimeString();
@@ -113,7 +114,6 @@ app.get('/api/update', async (req, res) => {
 	});
 
 	//Increment skipped podcasts
-	var currentDay = days[d.getUTCDay()];
 	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
 
 	await connection.query(query, function(err, rows, fields) {
