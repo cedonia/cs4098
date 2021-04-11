@@ -83,13 +83,14 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	.then(database.executeQuery(podcastQuery))
 	.then(database.executeQuery(chaptersQuery))
 	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false))
-	.catch(err => {
-		console.log(err); //Print error instead of stopping the API
-	});
-
-	res.status(200).json({
+	.then(result => {
+		res.status(200).json({
 		secret_edit_link: secret_edit_code,
 		url_rss: librilisten_id
+	});
+	})
+	.catch(err => {
+		console.log(err); //Print error instead of stopping the API
 	});
 });
 
