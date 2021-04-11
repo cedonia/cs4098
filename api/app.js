@@ -154,6 +154,7 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 	});
 
 	connection.end();
+	res.send(200);
 });
 
 let calcCurrentTimeString = (() => {
