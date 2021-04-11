@@ -138,7 +138,7 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 	var currentDateTime = calcCurrentTimeString();
 
 	const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'" + req.params.secret_edit_code + "\';";
-	
+	console.log("QUERY: " + query);
 	const connection = await database.makeConnection();
 	connection.connect();
 
@@ -149,12 +149,14 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 		}
 
 		for(var row of rows) {
+			console.log("UPDATING");
 			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, true);
+			console.log("UPDATED");
 		}
 	});
 
 	connection.end();
-	res.send(200);
+	res.status(200);
 });
 
 let calcCurrentTimeString = (() => {
