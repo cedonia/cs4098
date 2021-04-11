@@ -129,7 +129,7 @@ app.get('/api/update', async (req, res) => {
 
 	connection.end();
 
-	res.status(200); //todo is this right? 
+	res.sendStatus(200);
 
 });
 
@@ -153,7 +153,7 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 	});
 
 	connection.end();
-	res.status(200);
+	res.sendStatus(200);
 });
 
 let calcCurrentTimeString = (() => {
