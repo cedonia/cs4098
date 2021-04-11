@@ -94,7 +94,7 @@ const doTheFileGeneration = (async (url_rss, librilisten_id, chapterPubDates) =>
 			//Construct the new file
 			var builder = new parser.Builder();
 			var xml = builder.buildObject(result);
-			fs.writeFile('~/nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
+			fs.writeFile('../../../nginx_default/podcasts/' + librilisten_id + '.rss', xml, function (err) {
 				if (err) return console.log(err);
 			});
 		});
