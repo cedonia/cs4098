@@ -26,6 +26,14 @@ class Confirmation extends React.Component {
 
 	}
 
+	//Open instructions in a new tab
+	handleClickInstructions(event) {
+		event.preventDefault();
+	    event.stopPropagation();
+	    
+	    return false;
+  	}
+
     render() {
 
     	if(this.state.redirect) {
@@ -46,7 +54,7 @@ class Confirmation extends React.Component {
 		     	<p>
 		        	You have successfully generated a podcast feed! 
 		        	<br/>
-		        	Click <a href="https://cmp24.host.cs.st-andrews.ac.uk/podcast-instructions.txt" target="_blank">here</a> for instructions to subscribe on the podcast app of your choice.
+		        	Click <a href="https://cmp24.host.cs.st-andrews.ac.uk/podcast-instructions.txt" onClick={this.handleClickInstructions}>here</a> for instructions to subscribe on the podcast app of your choice.
 
 		        </p>
 
