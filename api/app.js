@@ -82,7 +82,10 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.")
 	.then(database.executeQuery(podcastQuery))
 	.then(database.executeQuery(chaptersQuery))
-	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id));
+	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id))
+	.catch(err => {
+		console.log(err); //Print error instead of stopping the API
+	});
 
 	res.status(200).json({
 		secret_edit_link: secret_edit_code,
