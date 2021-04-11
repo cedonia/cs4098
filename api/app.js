@@ -82,7 +82,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.")
 	.then(database.executeQuery(podcastQuery))
 	.then(database.executeQuery(chaptersQuery))
-	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id))
+	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false))
 	.catch(err => {
 		console.log(err); //Print error instead of stopping the API
 	});
@@ -109,7 +109,7 @@ app.get('/api/update', async (req, res) => {
 		if (err) throw err;
 
 		for(var row of rows) {
-			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id);
+			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, false);
 		}
 	});
 
@@ -117,7 +117,10 @@ app.get('/api/update', async (req, res) => {
 	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
 
 	await connection.query(query, function(err, rows, fields) {
-		if(err) throw err;
+		if(err) {
+			console.log(err);
+			res.status(404);
+		}
 		for(var row of rows) {
 			database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + 
 				"WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", connection);
@@ -128,6 +131,26 @@ app.get('/api/update', async (req, res) => {
 
 	res.status(200); //todo is this right? 
 
+});
+
+app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
+
+	var currentDateTime = calcCurrentTimeString();
+
+	const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'" + req.params.secret_edit_code + "\';";
+	const connection = database.makeConnection();
+	connection.connect();
+
+	await connection.query(query, function(err, rows, fields) {
+		if(err) {
+			console.log(err);
+			res.status(404);
+		}
+
+		for(var row of rows) {
+			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, true);
+		}
+	});
 });
 
 let calcCurrentTimeString = (() => {

@@ -10,14 +10,14 @@ const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "S
 Generate the rss file: Take the current date and time and the original rss url 
 and generate the initial file with just one chapter.
 **/
-module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_id) {
+module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_id, ignorePubDayDup) {
 
 	//Open a connection to the database
 	var connection = await database.makeConnection();
 	connection.connect();
 
 	//Calculate an array of the published chapters (including the one published today)
-	retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime, function(chapterPubDates) {
+	retrieveAndUpdatePublishedChapters(connection, librilisten_id, dateTime, ignorePubDayDup, function(chapterPubDates) {
 
 		//Return if it doesn't need to update the file
 		if(chapterPubDates == null) return;
@@ -29,7 +29,7 @@ module.exports.genUpdatedFile = async function (dateTime, url_rss, librilisten_i
 };
 
 //Calculate all the published chapters so far
-const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, dateTime, callback) => {
+const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, dateTime, ignorePubDayDup, callback) => {
 	var query = "SELECT Chapter_num, Pub_date FROM librilisten_chapters " 
 			+ "WHERE Librilisten_podcast_id = \'" + librilisten_id + "\' AND Pub_date IS NOT NULL;";
 
@@ -42,8 +42,8 @@ const retrieveAndUpdatePublishedChapters = (async (connection, librilisten_id, d
 			chapterPubDates[row.Chapter_num] = row.Pub_date;
 		}
 
-		//Check that this podcast hasn't already been updated today
-		if(chapterPubDates.length > 0) {
+		//Check that this podcast hasn't already been updated today (if not ignoring that)
+		if(!ignorePubDayDup && chapterPubDates.length > 0) {
 			var last = chapterPubDates[chapterPubDates.length - 1];
 			const ts = new Date();
 			last = last.split(' ');
