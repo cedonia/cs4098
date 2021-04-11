@@ -102,7 +102,7 @@ app.get('/api/update', async (req, res) => {
 	var currentDateTime = calcCurrentTimeString();
 	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 AND " + currentDay.toLowerCase() + " = true";
 
-	const connection = database.makeConnection();
+	const connection = await database.makeConnection();
 	connection.connect();
 
 	await connection.query(query, function(err, rows, fields) {
@@ -138,7 +138,8 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 	var currentDateTime = calcCurrentTimeString();
 
 	const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'" + req.params.secret_edit_code + "\';";
-	const connection = database.makeConnection();
+	
+	const connection = await database.makeConnection();
 	connection.connect();
 
 	await connection.query(query, function(err, rows, fields) {
@@ -151,6 +152,8 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, true);
 		}
 	});
+
+	connection.end();
 });
 
 let calcCurrentTimeString = (() => {
