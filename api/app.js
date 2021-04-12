@@ -26,60 +26,62 @@ app.get('/api', async(req, res) => {
 //Sample: https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
 app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
-	//Generate new id and edit code, record current date and time
-	const librilisten_id = uuid();
-	const secret_edit_code = uuid();
-	const currentDateTime = calcCurrentTimeString();
-
-	//Generate the formatted title
-	var formattedTitle = req.params.title;
-	if(formattedTitle.startsWith("The")) {
-		//Drop "the" if it's at the start of the title
-		formattedTitle = formattedTitle.slice(6);
-	}	
-
-	//Retrieve the rss url from Librivox
-	const queryRes = await axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}')
-	.catch((err) => {
-		console.log(err);
-		res.status(200).json({
-			secret_edit_link: "dummy",
-			url_rss: "dummy"
-		});
-	});
-
-	const url_rss = queryRes.data.books[0].url_rss;
-
-	//Develop necessary queries
-	const bookQuery = 'INSERT INTO librivox_books VALUES (\'' + 
-		url_rss + '\', \'' + 
-		req.params.title + 
-		'\', null);';
-
-	const podcastQuery = 'INSERT INTO librilisten_podcasts VALUES (\'' + 
-		librilisten_id + '\', \'' + 
-		url_rss + '\', \'' + 
-		secret_edit_code + '\', ' + 
-		req.query.mon + ', ' + 
-		req.query.tues + ', ' + 
-		req.query.wed + ', ' + 
-		req.query.thurs + ', ' + 
-		req.query.fri + ', ' + 
-		req.query.sat + ', ' + 
-		req.query.sun + 
-		', false, 0);';
-
-	var chaptersQuery = 'INSERT INTO librilisten_chapters VALUES (\'' + 
-		librilisten_id + 
-		'\', 0, null)';
-
-	//Add additional entries for each chapter
-	for(var i = 1; i < queryRes.data.books[0].num_sections; i++) {
-		chaptersQuery = chaptersQuery + ', (\'' + librilisten_id + '\', ' + i + ', null)';
-	}
-	chaptersQuery = chaptersQuery + ';';
-
 	try {
+
+
+		//Generate new id and edit code, record current date and time
+		const librilisten_id = uuid();
+		const secret_edit_code = uuid();
+		const currentDateTime = calcCurrentTimeString();
+
+		//Generate the formatted title
+		var formattedTitle = req.params.title;
+		if(formattedTitle.startsWith("The")) {
+			//Drop "the" if it's at the start of the title
+			formattedTitle = formattedTitle.slice(6);
+		}	
+
+		//Retrieve the rss url from Librivox
+		const queryRes = await axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}')
+		.catch((err) => {
+			console.log(err);
+			res.status(200).json({
+				secret_edit_link: "dummy",
+				url_rss: "dummy"
+			});
+		});
+
+		const url_rss = queryRes.data.books[0].url_rss;
+
+		//Develop necessary queries
+		const bookQuery = 'INSERT INTO librivox_books VALUES (\'' + 
+			url_rss + '\', \'' + 
+			req.params.title + 
+			'\', null);';
+
+		const podcastQuery = 'INSERT INTO librilisten_podcasts VALUES (\'' + 
+			librilisten_id + '\', \'' + 
+			url_rss + '\', \'' + 
+			secret_edit_code + '\', ' + 
+			req.query.mon + ', ' + 
+			req.query.tues + ', ' + 
+			req.query.wed + ', ' + 
+			req.query.thurs + ', ' + 
+			req.query.fri + ', ' + 
+			req.query.sat + ', ' + 
+			req.query.sun + 
+			', false, 0);';
+
+		var chaptersQuery = 'INSERT INTO librilisten_chapters VALUES (\'' + 
+			librilisten_id + 
+			'\', 0, null)';
+
+		//Add additional entries for each chapter
+		for(var i = 1; i < queryRes.data.books[0].num_sections; i++) {
+			chaptersQuery = chaptersQuery + ', (\'' + librilisten_id + '\', ' + i + ', null)';
+		}
+		chaptersQuery = chaptersQuery + ';';
+
 		await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.");
 		await database.executeQuery(podcastQuery);
 		await database.executeQuery(chaptersQuery);
@@ -89,8 +91,13 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 			url_rss: librilisten_id
 		});
 	}
+
 	catch(err) {
 		console.log(err);
+		res.status(404).json({
+			secret_edit_link: 'ERROR',
+			url_rss: 'ERROR'
+		});
 	}
 });
 
