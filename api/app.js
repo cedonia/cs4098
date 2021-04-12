@@ -79,19 +79,19 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 	}
 	chaptersQuery = chaptersQuery + ';';
 
-	await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.")
-	.then(database.executeQuery(podcastQuery))
-	.then(database.executeQuery(chaptersQuery))
-	.then(FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false))
-	.then(result => {
+	try {
+		await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.");
+		await database.executeQuery(podcastQuery);
+		await database.executeQuery(chaptersQuery);
+		await FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false);
 		res.status(200).json({
-		secret_edit_link: secret_edit_code,
-		url_rss: librilisten_id
-	});
-	})
-	.catch(err => {
-		console.log(err); //Print error instead of stopping the API
-	});
+			secret_edit_link: secret_edit_code,
+			url_rss: librilisten_id
+		});
+	}
+	catch(err) {
+		console.log(err);
+	}
 });
 
 app.get('/api/update', async (req, res) => {
