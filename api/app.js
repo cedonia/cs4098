@@ -125,8 +125,7 @@ app.get('/api/update', async (req, res) => {
 
 		await connection.query(query, function(err, rows, fields) {
 			for(var row of rows) {
-				console.log(row.skip_next);
-				database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + Number(row.skip_next) - 1 + 
+				database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + parseInt(row.skip_next, 10) - 1 + 
 					"WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", connection);
 			}
 		});
