@@ -151,7 +151,8 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 	try {
 		var currentDateTime = calcCurrentTimeString();
 
-		const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'" + req.params.secret_edit_code + "\' AND is_done = false;";
+		const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'"
+		 + req.params.secret_edit_code + "\' AND is_done = false;";
 		const connection = await database.makeConnection();
 		connection.connect();
 
@@ -177,11 +178,13 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 });
 
 app.get('/api/skipPubDays/:secret_edit_code', async (req, res) => {
+
 	try {
 		query = "UPDATE librilisten_podcasts SET skip_next = " + req.query.toSkip + 
 			" WHERE secret_edit_code =\'" + req.params.secret_edit_code + 
 			"\' AND is_done = false;";
 		await database.executeQuery(query);
+		res.status(200).send("Your podcast has successfully been paused for the following number of days: " + req.query.toSkip);
 	}
 	catch(err) {
 		console.log(err);
