@@ -82,14 +82,21 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		}
 		chaptersQuery = chaptersQuery + ';';
 
-		await database.executeQueryWithErrorMsg(bookQuery, "This book is already in the database.");
-		await database.executeQuery(podcastQuery);
-		await database.executeQuery(chaptersQuery);
-		await FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false);
-		res.status(200).json({
+		const connection = await database.makeConnection();
+		connection.connect();
+
+		await database.executeQueryWithErrorMsg(bookQuery, connection, "This book is already in the database.");
+		await database.executeQuery(podcastQuery, connection);
+		await database.executeQuery(chaptersQuery, connection);
+		connection.end();
+
+		FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false)
+		.then(result => {
+			res.status(200).json({
 			secret_edit_link: secret_edit_code,
 			url_rss: librilisten_id
 		});
+		})
 	}
 
 	catch(err) {
