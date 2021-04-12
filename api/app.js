@@ -176,6 +176,19 @@ app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 	}
 });
 
+app.get('/api/skipPubDays/:secret_edit_code', async (req, res) => {
+	try {
+		query = "UPDATE librilisten_podcasts SET skip_next = " + req.query.toSkip + 
+			" WHERE secret_edit_code =\'" + req.params.secret_edit_code + 
+			"\' AND is_done = false;";
+		await database.executeQuery(query);
+	}
+	catch(err) {
+		console.log(err);
+		res.sendStatus(404);
+	}
+});
+
 let calcCurrentTimeString = (() => {
 	let ts = new Date();
 
