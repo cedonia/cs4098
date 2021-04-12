@@ -118,7 +118,7 @@ class Home extends React.Component {
         <p className="regular-text">
           <br/>
           <br/>
-          1. Go to <a href="https://librivox.org/search/" target="_blank">Librivox</a> and choose a book.
+          1. Go to <a href="https://librivox.org/search/" target="_blank">Librivox</a> and onto the page of the book you want.
           <br/>
           2. Paste its title (without the author!) into the form below.
           <br/>
