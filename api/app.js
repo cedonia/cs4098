@@ -101,10 +101,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
 	catch(err) {
 		console.log(err);
-		res.status(404).json({
-			secret_edit_link: 'ERROR',
-			url_rss: 'ERROR'
-		});
+		res.status(404);
 	}
 });
 

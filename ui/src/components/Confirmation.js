@@ -45,7 +45,7 @@ class Confirmation extends React.Component {
 		     	<p>
 		        	You have successfully generated a podcast feed! 
 		        	<br/>
-		        	Click <a target="_blank" href="https://cmp24.host.cs.st-andrews.ac.uk/podcast-instructions.txt">here</a> for instructions to subscribe on the podcast app of your choice.
+		        	Click <a target="_blank" href="https://docs.google.com/document/d/1ZsmgUx1urZqp-Om2q0z9MRi48TO4YlAX56OipzBn-ho/edit?usp=sharing">here</a> for instructions to subscribe on the podcast app of your choice.
 
 		        </p>
 		        <p>
@@ -56,7 +56,7 @@ class Confirmation extends React.Component {
 		        </p>
 
 		        <p>
-		        	Unique edit link (keep this secret!):
+		        	Unique edit code (store this and keep it secret!):
 		        	<br/>
 		        	{this.state.secret_edit_code}
 

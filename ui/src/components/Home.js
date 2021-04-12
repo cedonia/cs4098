@@ -76,6 +76,13 @@ class Home extends React.Component {
   **/
   handleSubmit(event) {
 
+    //If no days have been selected, do not submit the page.
+    if(this.state.mon === false && this.state.tues === false && this.state.wed === false && this.state.thurs === false
+      && this.state.fri === false && this.state.sat === false && this.state.sun === false) {
+      console.log("User must select at least one day.");
+      return;
+  }
+
     //Example URI: https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
     var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + 
       '?mon=' + this.state.mon + 
@@ -88,6 +95,13 @@ class Home extends React.Component {
     
     axios.get(uri)
     .then(response => {
+
+      //Don't move forward if there is an API error
+      if(response.status != 200) {
+        console.log("There has been an error with the API.");
+        return;
+      }
+
       this.setState({
         redirect: true,
         url_rss: response.data.url_rss,
