@@ -29,6 +29,20 @@ module.exports.executeQuery = async function(query) {
 	connection.end();
 }
 
+module.exports.executeThreeQueries = async function(one, two, three, connection) {
+	connection.query(one, function(err, rows, fields) {
+		if(err) console.log("This book is already in the database.");
+
+		connection.query(two, function(err2, rows, fields) {
+			if(err2) throw err2;
+
+			connection.query(three, function(err3, rows, fields) {
+				if(err3) throw err3;
+			})
+		})
+	})
+}
+
 module.exports.executeQueryWithErrorMsg = async function(query, connection, errorMsg) {
 	connection.query(query, function(err, rows, fields) {
 		if(err) console.log(errorMsg);

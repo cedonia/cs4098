@@ -78,9 +78,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		const connection = await database.makeConnection();
 		connection.connect();
 
-		await database.executeQueryWithErrorMsg(bookQuery, connection, "This book is already in the database.");
-		await database.executeQuery(podcastQuery, connection);
-		await database.executeQuery(chaptersQuery, connection);
+		await database.executeThreeQueries(bookQuery, podcastQuery, chaptersQuery, connection);
 		connection.end();
 
 		FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false)
