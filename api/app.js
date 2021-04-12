@@ -78,22 +78,37 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		const connection = await database.makeConnection();
 		connection.connect();
 
-		await database.executeThreeQueries(bookQuery, podcastQuery, chaptersQuery, connection);
-		connection.end();
-
-		FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false)
-		.then(result => {
-			res.status(200).json({
-			secret_edit_link: secret_edit_code,
-			url_rss: librilisten_id
+		await database.executeThreeQueries(bookQuery, podcastQuery, chaptersQuery, connection, function() {
+			FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false)
+			.then(result => {
+				res.status(200).json({
+				secret_edit_link: secret_edit_code,
+				url_rss: librilisten_id
+			});
+			})
 		});
-		})
+		connection.end();
 	}
 
 	catch(err) {
 		console.log(err);
 		res.sendStatus(404);
 	}
+});
+
+let executeThreeQueries = (async (one, two, three, connection, callback) => {
+	connection.query(one, function(err, rows, fields) {
+		if(err) console.log("This book is already in the database.");
+
+		connection.query(two, function(err2, rows, fields) {
+			if(err2) throw err2;
+
+			connection.query(three, function(err3, rows, fields) {
+				if(err3) throw err3;
+				return callback();
+			})
+		})
+	})
 });
 
 app.get('/api/update', async (req, res) => {
