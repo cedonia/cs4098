@@ -79,6 +79,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		connection.connect();
 
 		await executeThreeQueries(bookQuery, podcastQuery, chaptersQuery, connection, function() {
+			connection.end();
 			FileGenerator.genUpdatedFile(currentDateTime, url_rss, librilisten_id, false)
 			.then(result => {
 				res.status(200).json({
@@ -87,7 +88,6 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 			});
 			})
 		});
-		connection.end();
 	}
 
 	catch(err) {
