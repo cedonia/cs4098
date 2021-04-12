@@ -11,7 +11,7 @@ class Confirmation extends React.Component {
 			const params = this.props.params;
 			this.state = {
 				url_rss: decodeURIComponent(params.url_rss), 
-				secret_edit_link: decodeURIComponent(params.secret_edit_link),
+				secret_edit_code: decodeURIComponent(params.secret_edit_code),
 				redirect: false
 			};
 		}
@@ -19,7 +19,7 @@ class Confirmation extends React.Component {
 		catch(e) {
 			this.state={
 				url_rss: this.props.params.url_rss, 
-				secret_edit_link: this.props.params.secret_edit_link,
+				secret_edit_code: this.props.params.secret_edit_code,
 				redirect: false
 			};
 		}		
@@ -33,7 +33,6 @@ class Confirmation extends React.Component {
     	}
 
     	const podcastLink = this.state.url_rss;
-    	const secretLink = this.state.secret_edit_link;
 
     	return (
 	    	<div className="App">
@@ -59,7 +58,7 @@ class Confirmation extends React.Component {
 		        <p>
 		        	Unique edit link (keep this secret!):
 		        	<br/>
-		        	<a target="_blank" href={secretLink}>{secretLink}</a>
+		        	{this.state.secret_edit_code}
 
 		        </p>
 
