@@ -42,14 +42,7 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 		}	
 
 		//Retrieve the rss url from Librivox
-		const queryRes = await axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}')
-		.catch((err) => {
-			console.log(err);
-			res.status(200).json({
-				secret_edit_link: "dummy",
-				url_rss: "dummy"
-			});
-		});
+		const queryRes = await axios.get('https://librivox.org/api/feed/audiobooks?title=' + formattedTitle + '&&fields={url_rss,num_sections}');
 
 		const url_rss = queryRes.data.books[0].url_rss;
 
