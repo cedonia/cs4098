@@ -81,7 +81,7 @@ class Home extends React.Component {
       && this.state.fri === false && this.state.sat === false && this.state.sun === false) {
       console.log("User must select at least one day.");
       return;
-  }
+    }
 
     //Example URI: https://cmp24.host.cs.st-andrews.ac.uk/api/GenPodcast/title/autumn?mon=false&tues=false&wed=false&thurs=false&fri=false&sat=false&sun=true
     var uri = this.apiLink + '/api/GenPodcast/title/' + encodeURIComponent(this.state.title) + 

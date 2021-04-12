@@ -94,71 +94,86 @@ app.get('/api/GenPodcast/title/:title', async (req, res) => {
 
 	catch(err) {
 		console.log(err);
-		res.status(404);
+		res.sendStatus(404);
 	}
 });
 
 app.get('/api/update', async (req, res) => {
 
-	var d = new Date();
-	var currentDay = days[d.getUTCDay()];
+	try {
 
-	//Update all podcasts which need to be updated
-	var currentDateTime = calcCurrentTimeString();
-	var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 AND " + currentDay.toLowerCase() + " = true";
+		var d = new Date();
+		var currentDay = days[d.getUTCDay()];
 
-	const connection = await database.makeConnection();
-	connection.connect();
+		//Update all podcasts which need to be updated
+		var currentDateTime = calcCurrentTimeString();
+		var query = "SELECT Librivox_rss_url, Librilisten_podcast_id FROM librilisten_podcasts WHERE is_done = false AND skip_next = 0 AND " + currentDay.toLowerCase() + " = true";
 
-	await connection.query(query, function(err, rows, fields) {
-		if (err) throw err;
+		const connection = await database.makeConnection();
+		connection.connect();
 
-		for(var row of rows) {
-			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, false);
-		}
-	});
+		await connection.query(query, function(err, rows, fields) {
+			if (err) throw err;
 
-	//Increment skipped podcasts
-	query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
+			for(var row of rows) {
+				FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, false);
+			}
+		});
 
-	await connection.query(query, function(err, rows, fields) {
-		if(err) {
-			console.log(err);
-			res.status(404);
-		}
-		for(var row of rows) {
-			database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + 
-				"WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", connection);
-		}
-	});
+		//Increment skipped podcasts
+		query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
 
-	connection.end();
+		await connection.query(query, function(err, rows, fields) {
+			if(err) {
+				console.log(err);
+				res.status(404);
+			}
+			for(var row of rows) {
+				database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + 
+					"WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", connection);
+			}
+		});
 
-	res.sendStatus(200);
+		connection.end();
+
+		res.sendStatus(200);
+	}
+
+	catch(err) {
+		console.log(err);
+		res.sendStatus(404);
+	}
 
 });
 
 app.get('/api/updateRightNow/:secret_edit_code', async (req, res) => {
 
-	var currentDateTime = calcCurrentTimeString();
+	try {
+		var currentDateTime = calcCurrentTimeString();
 
-	const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'" + req.params.secret_edit_code + "\' AND is_done = false;";
-	const connection = await database.makeConnection();
-	connection.connect();
+		const query = "SELECT Librilisten_podcast_id, Librivox_rss_url FROM librilisten_podcasts WHERE secret_edit_code = \'" + req.params.secret_edit_code + "\' AND is_done = false;";
+		const connection = await database.makeConnection();
+		connection.connect();
 
-	await connection.query(query, function(err, rows, fields) {
-		if(err) {
-			console.log(err);
-			res.status(404);
-		}
+		await connection.query(query, function(err, rows, fields) {
+			if(err) {
+				console.log(err);
+				res.status(404);
+			}
 
-		for(var row of rows) {
-			FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, true);
-		}
-	});
+			for(var row of rows) {
+				FileGenerator.genUpdatedFile(currentDateTime, row.Librivox_rss_url, row.Librilisten_podcast_id, true);
+			}
+		});
 
-	connection.end();
-	res.sendStatus(200);
+		connection.end();
+		res.sendStatus(200);
+	}
+
+	catch(err) {
+		console.log(err);
+		res.sendStatus(404);
+	}
 });
 
 let calcCurrentTimeString = (() => {
