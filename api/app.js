@@ -124,11 +124,8 @@ app.get('/api/update', async (req, res) => {
 		query = "SELECT Librilisten_podcast_id, skip_next FROM librilisten_podcasts WHERE skip_next > 0 AND " + currentDay.toLowerCase() + " = true;"
 
 		await connection.query(query, function(err, rows, fields) {
-			if(err) {
-				console.log(err);
-				res.status(404);
-			}
 			for(var row of rows) {
+				console.log("SKIP NEXT : " + row.skip_next + ", NOW: " + row.skip_next - 1);
 				database.executeQuery('UPDATE librilisten_podcasts SET skip_next = ' + row.skip_next - 1 + 
 					"WHERE Librilisten_podcast_id = \'" + row.Librilisten_podcast_id + "\';", connection);
 			}
